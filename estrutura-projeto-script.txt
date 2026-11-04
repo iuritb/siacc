@@ -1,0 +1,22 @@
+function Show-Tree {
+    param(
+        [string]$Path = ".",
+        [string]$Indent = ""
+    )
+
+    $ignore = @("node_modules", ".angular", "dist", ".git")
+
+    $items = Get-ChildItem -LiteralPath $Path -Force |
+        Where-Object { $_.Name -notin $ignore } |
+        Sort-Object Name
+
+    foreach ($item in $items) {
+        Write-Output "$Indent|-- $($item.Name)"
+
+        if ($item.PSIsContainer) {
+            Show-Tree -Path $item.FullName -Indent "$Indent|   "
+        }
+    }
+}
+
+Show-Tree | Out-File -FilePath "estrutura-projeto.txt" -Encoding utf8
