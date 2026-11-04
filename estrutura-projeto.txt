@@ -1,0 +1,863 @@
+|-- .editorconfig
+|-- .gitignore
+|-- .npmrc
+|-- .s2i
+|   |-- bin
+|   |   |-- assemble
+|   |   |-- run
+|-- .vscode
+|   |-- extensions.json
+|   |-- launch.json
+|   |-- tasks.json
+|-- angular.json
+|-- coverage
+|   |-- lcov.info
+|-- estrutura-projeto.txt
+|-- extra-webpack.config.js
+|-- jest.config.ts
+|-- matriz-acesso-003.drawio.png
+|-- package.json
+|-- package-lock.json
+|-- README.md
+|-- reports
+|   |-- sonarqubeTestReport.xml
+|-- setup-jest.ts
+|-- siacc_frontend.png
+|-- sonar.properties
+|-- src
+|   |-- app
+|   |   |-- adapters
+|   |   |   |-- agendamento.adapter.ts
+|   |   |   |-- autorizacao.adapter.ts
+|   |   |   |-- detalhamento.adapter.ts
+|   |   |-- app.component.html
+|   |   |-- app.component.ts
+|   |   |-- app.module.ts
+|   |   |-- app-routing.module.ts
+|   |   |-- features
+|   |   |   |-- autorizacoes-agendamentos
+|   |   |   |   |-- application
+|   |   |   |   |   |-- query
+|   |   |   |   |   |   |-- autorizacoes-agendamentos-query.service.spec.ts
+|   |   |   |   |   |   |-- autorizacoes-agendamentos-query.service.ts
+|   |   |   |   |   |-- store
+|   |   |   |   |   |   |-- autorizacoes-agendamentos.store.spec.ts
+|   |   |   |   |   |   |-- autorizacoes-agendamentos.store.ts
+|   |   |   |   |-- autorizacoes-agendamentos.component.html
+|   |   |   |   |-- autorizacoes-agendamentos.component.scss
+|   |   |   |   |-- autorizacoes-agendamentos.component.spec.ts
+|   |   |   |   |-- autorizacoes-agendamentos.component.ts
+|   |   |   |   |-- autorizacoes-agendamentos-filtros-configs.ts
+|   |   |   |   |-- domain
+|   |   |   |   |   |-- autorizacoes-agendamentos.constants.ts
+|   |   |   |   |   |-- autorizacoes-agendamentos-consulta-result.model.ts
+|   |   |   |   |   |-- autorizacoes-agendamentos-error-mapper.service.spec.ts
+|   |   |   |   |   |-- autorizacoes-agendamentos-error-mapper.service.ts
+|   |   |   |   |   |-- autorizacoes-agendamentos-presentation-result.model.ts
+|   |   |   |-- debito-manual-pendente
+|   |   |   |   |-- application
+|   |   |   |   |   |-- query
+|   |   |   |   |   |   |-- debito-manual-pendente-query.service.spec.ts
+|   |   |   |   |   |   |-- debito-manual-pendente-query.service.ts
+|   |   |   |   |   |-- store
+|   |   |   |   |   |   |-- debito-manual-pendente.store.spec.ts
+|   |   |   |   |   |   |-- debito-manual-pendente.store.ts
+|   |   |   |   |   |   |-- modal-acerto-manual-debito.store.spec.ts
+|   |   |   |   |   |   |-- modal-acerto-manual-debito.store.ts
+|   |   |   |   |   |   |-- modal-autorizar-debito.store.spec.ts
+|   |   |   |   |   |   |-- modal-autorizar-debito.store.ts
+|   |   |   |   |   |   |-- modal-retentar-debito.store.spec.ts
+|   |   |   |   |   |   |-- modal-retentar-debito.store.ts
+|   |   |   |   |-- debito-manual-pendente.component.html
+|   |   |   |   |-- debito-manual-pendente.component.scss
+|   |   |   |   |-- debito-manual-pendente.component.spec.ts
+|   |   |   |   |-- debito-manual-pendente.component.ts
+|   |   |   |   |-- debito-manual-pendente.helpers.spec.ts
+|   |   |   |   |-- debito-manual-pendente.helpers.ts
+|   |   |   |   |-- domain
+|   |   |   |   |   |-- debito-manual.enum.ts
+|   |   |   |   |   |-- debito-manual-pendente.constants.ts
+|   |   |   |   |   |-- debito-manual-pendente.mocks.ts
+|   |   |   |   |   |-- debito-manual-pendente.model.ts
+|   |   |   |   |   |-- debito-manual-pendente-contracts.interface.ts
+|   |   |   |   |   |-- filtros-avancados-debito-manual.ts
+|   |   |   |   |-- presentation
+|   |   |   |   |   |-- card-debito-pendente
+|   |   |   |   |   |   |-- card-debito-pendente.component.html
+|   |   |   |   |   |   |-- card-debito-pendente.component.scss
+|   |   |   |   |   |   |-- card-debito-pendente.component.spec.ts
+|   |   |   |   |   |   |-- card-debito-pendente.component.ts
+|   |   |   |   |   |-- modal-acerto-manual-debito
+|   |   |   |   |   |   |-- modal-acerto-manual-debito.component.html
+|   |   |   |   |   |   |-- modal-acerto-manual-debito.component.spec.ts
+|   |   |   |   |   |   |-- modal-acerto-manual-debito.component.ts
+|   |   |   |   |   |-- modal-autorizar-debito
+|   |   |   |   |   |   |-- modal-autorizar-debito.component.html
+|   |   |   |   |   |   |-- modal-autorizar-debito.component.spec.ts
+|   |   |   |   |   |   |-- modal-autorizar-debito.component.ts
+|   |   |   |   |   |-- modal-retentar-debito
+|   |   |   |   |   |   |-- modal-retentar-debito.component.html
+|   |   |   |   |   |   |-- modal-retentar-debito.component.spec.ts
+|   |   |   |   |   |   |-- modal-retentar-debito.component.ts
+|   |   |   |   |   |-- style-util
+|   |   |   |   |   |   |-- modal-style.scss
+|   |   |   |   |   |   |-- status-cores.scss
+|   |   |   |-- lote-agendamentos
+|   |   |   |   |-- application
+|   |   |   |   |   |-- lote-agendamentos.store.spec.ts
+|   |   |   |   |   |-- lote-agendamentos.store.ts
+|   |   |   |   |-- domain
+|   |   |   |   |   |-- lote-agendamentos.enum.ts
+|   |   |   |   |   |-- lote-agendamentos.model.ts
+|   |   |   |   |   |-- lote-agendamentos-contracts.ts
+|   |   |   |   |   |-- lote-agendamentos-flow.model.ts
+|   |   |   |   |-- lote-agendamentos-shell.component.html
+|   |   |   |   |-- lote-agendamentos-shell.component.spec.ts
+|   |   |   |   |-- lote-agendamentos-shell.component.ts
+|   |   |   |   |-- subfeatures
+|   |   |   |   |   |-- detalhamento-agendamento-lote
+|   |   |   |   |   |   |-- application
+|   |   |   |   |   |   |   |-- query
+|   |   |   |   |   |   |   |   |-- detalhamento-agendamento-lote-query.service.spec.ts
+|   |   |   |   |   |   |   |   |-- detalhamento-agendamento-lote-query.service.ts
+|   |   |   |   |   |   |   |-- store
+|   |   |   |   |   |   |   |   |-- detalhamento-agendamento-lote.store.spec.ts
+|   |   |   |   |   |   |   |   |-- detalhamento-agendamento-lote.store.ts
+|   |   |   |   |   |   |-- detalhamento-agendamento-lote.component.html
+|   |   |   |   |   |   |-- detalhamento-agendamento-lote.component.spec.ts
+|   |   |   |   |   |   |-- detalhamento-agendamento-lote.component.ts
+|   |   |   |   |   |   |-- detalhamento-agendamento-lote.helpers.ts
+|   |   |   |   |   |   |-- domain
+|   |   |   |   |   |   |   |-- detalhamento-agendamento-lote.constants.ts
+|   |   |   |   |   |   |   |-- detalhamento-agendamento-lote.contracts.ts
+|   |   |   |   |   |   |   |-- detalhamento-agendamento-lote.model.ts
+|   |   |   |   |   |-- detalhamento-lote
+|   |   |   |   |   |   |-- application
+|   |   |   |   |   |   |   |-- query
+|   |   |   |   |   |   |   |   |-- detalhamento-lote-query.service.spec.ts
+|   |   |   |   |   |   |   |   |-- detalhamento-lote-query.service.ts
+|   |   |   |   |   |   |   |-- store
+|   |   |   |   |   |   |   |   |-- detalhamento-lote.store.spec.ts
+|   |   |   |   |   |   |   |   |-- detalhamento-lote.store.ts
+|   |   |   |   |   |   |-- detalhamento-lote.component.html
+|   |   |   |   |   |   |-- detalhamento-lote.component.scss
+|   |   |   |   |   |   |-- detalhamento-lote.component.ts
+|   |   |   |   |   |   |-- detalhamento-lote.helpers.spec.ts
+|   |   |   |   |   |   |-- detalhamento-lote.helpers.ts
+|   |   |   |   |   |   |-- domain
+|   |   |   |   |   |   |   |-- detalhamento-lote.constants.ts
+|   |   |   |   |   |   |   |-- detalhamento-lote.contracts.ts
+|   |   |   |   |   |   |   |-- detalhamento-lote.model.ts
+|   |   |   |   |   |-- tabela-lote
+|   |   |   |   |   |   |-- application
+|   |   |   |   |   |   |   |-- query
+|   |   |   |   |   |   |   |   |-- tabela-lote-query.service.spec.ts
+|   |   |   |   |   |   |   |   |-- tabela-lote-query.service.ts
+|   |   |   |   |   |   |   |-- store
+|   |   |   |   |   |   |   |   |-- tabela-lote.store.spec.ts
+|   |   |   |   |   |   |   |   |-- tabela-lote.store.ts
+|   |   |   |   |   |   |-- domain
+|   |   |   |   |   |   |   |-- tabela-lote.constants.ts
+|   |   |   |   |   |   |   |-- tabela-lote.model.ts
+|   |   |   |   |   |   |-- tabela-lote.component.html
+|   |   |   |   |   |   |-- tabela-lote.component.scss
+|   |   |   |   |   |   |-- tabela-lote.component.ts
+|   |   |   |   |   |   |-- tabela-lote.helpers.spec.ts
+|   |   |   |   |   |   |-- tabela-lote.helpers.ts
+|   |   |-- interfaces.ts
+|   |   |-- pages
+|   |   |   |-- app-principal
+|   |   |   |   |-- app-principal.component.css
+|   |   |   |   |-- app-principal.component.html
+|   |   |   |   |-- app-principal.component.spec.ts
+|   |   |   |   |-- app-principal.component.ts
+|   |   |   |-- convenio
+|   |   |   |   |-- convenio.component.html
+|   |   |   |   |-- convenio.component.scss
+|   |   |   |   |-- convenio.component.spec.ts
+|   |   |   |   |-- convenio.component.ts
+|   |   |   |-- convenios-pendentes
+|   |   |   |   |-- convenios-pendentes.component.html
+|   |   |   |   |-- convenios-pendentes.component.scss
+|   |   |   |   |-- convenios-pendentes.component.spec.ts
+|   |   |   |   |-- convenios-pendentes.component.ts
+|   |   |   |-- manutencao-van
+|   |   |   |   |-- manutencao-van.component.html
+|   |   |   |   |-- manutencao-van.component.scss
+|   |   |   |   |-- manutencao-van.component.spec.ts
+|   |   |   |   |-- manutencao-van.component.ts
+|   |   |   |-- parametros-gerais
+|   |   |   |   |-- parametros-gerais.component.html
+|   |   |   |   |-- parametros-gerais.component.scss
+|   |   |   |   |-- parametros-gerais.component.spec.ts
+|   |   |   |   |-- parametros-gerais.component.ts
+|   |   |   |-- parametros-tarifa
+|   |   |   |   |-- parametros-tarifa.component.html
+|   |   |   |   |-- parametros-tarifa.component.scss
+|   |   |   |   |-- parametros-tarifa.component.spec.ts
+|   |   |   |   |-- parametros-tarifa.component.ts
+|   |   |   |-- parametros-texto
+|   |   |   |   |-- parametros-texto.component.html
+|   |   |   |   |-- parametros-texto.component.scss
+|   |   |   |   |-- parametros-texto.component.spec.ts
+|   |   |   |   |-- parametros-texto.component.ts
+|   |   |   |-- relatoriolotecobr
+|   |   |   |   |-- relatoriolotecobr.component.html
+|   |   |   |   |-- relatoriolotecobr.component.scss
+|   |   |   |   |-- relatoriolotecobr.component.spec.ts
+|   |   |   |   |-- relatoriolotecobr.component.ts
+|   |   |   |-- relatorioremessa
+|   |   |   |   |-- relatorioremessa.component.html
+|   |   |   |   |-- relatorioremessa.component.scss
+|   |   |   |   |-- relatorioremessa.component.spec.ts
+|   |   |   |   |-- relatorioremessa.component.ts
+|   |   |   |-- relatoriorepasse
+|   |   |   |   |-- relatoriorepasse.component.html
+|   |   |   |   |-- relatoriorepasse.component.scss
+|   |   |   |   |-- relatoriorepasse.component.ts
+|   |   |   |-- relatorios
+|   |   |   |   |-- relatorios.component.html
+|   |   |   |   |-- relatorios.component.scss
+|   |   |   |   |-- relatorios.component.spec.ts
+|   |   |   |   |-- relatorios.component.ts
+|   |   |   |   |-- relatorios-interface.ts
+|   |   |   |-- relatorios-movimentacao
+|   |   |   |   |-- relatorios-movimentacao.component.html
+|   |   |   |   |-- relatorios-movimentacao.component.scss
+|   |   |   |   |-- relatorios-movimentacao.component.spec.ts
+|   |   |   |   |-- relatorios-movimentacao.component.ts
+|   |   |   |-- relatorios-remessa
+|   |   |   |   |-- relatorios-remessa.component.html
+|   |   |   |   |-- relatorios-remessa.component.scss
+|   |   |   |   |-- relatorios-remessa.component.spec.ts
+|   |   |   |   |-- relatorios-remessa.component.ts
+|   |   |   |   |-- relatorios-remessa.interface.ts
+|   |   |   |-- simulacoes-pendentes
+|   |   |   |   |-- simulacoes-pendentes.component.html
+|   |   |   |   |-- simulacoes-pendentes.component.scss
+|   |   |   |   |-- simulacoes-pendentes.component.spec.ts
+|   |   |   |   |-- simulacoes-pendentes.component.ts
+|   |   |   |-- simulador
+|   |   |   |   |-- simulador.component.html
+|   |   |   |   |-- simulador.component.scss
+|   |   |   |   |-- simulador.component.spec.ts
+|   |   |   |   |-- simulador.component.ts
+|   |   |-- services
+|   |   |   |-- autorizacao-agendamento
+|   |   |   |   |-- autorizacao-agendamento.service.spec.ts
+|   |   |   |   |-- autorizacao-agendamento.service.ts
+|   |   |   |-- base-interacao-relatorio-repasse
+|   |   |   |   |-- base-interacao-relatorio-repasse.service.spec.ts
+|   |   |   |   |-- base-interacao-relatorio-repasse.service.ts
+|   |   |   |-- cliente
+|   |   |   |   |-- cliente.service.spec.ts
+|   |   |   |   |-- cliente.service.ts
+|   |   |   |-- cobr
+|   |   |   |   |-- cobr.service.spec.ts
+|   |   |   |   |-- cobr.service.ts
+|   |   |   |-- convenio
+|   |   |   |   |-- cache
+|   |   |   |   |   |-- convenio-cache.service.spec.ts
+|   |   |   |   |   |-- convenio-cache.service.ts
+|   |   |   |   |-- convenio.service.spec.ts
+|   |   |   |   |-- convenio.service.ts
+|   |   |   |-- custom-validators
+|   |   |   |   |-- custom-validators.service.spec.ts
+|   |   |   |   |-- custom-validators.service.ts
+|   |   |   |-- dados-cobranca
+|   |   |   |   |-- dados-cobranca.service.spec.ts
+|   |   |   |   |-- dados-cobranca.service.ts
+|   |   |   |-- dados-contabil
+|   |   |   |   |-- dados-contabil.service.spec.ts
+|   |   |   |   |-- dados-contabil.service.ts
+|   |   |   |-- dados-liquidacao
+|   |   |   |   |-- dados-liquidacao.service.spec.ts
+|   |   |   |   |-- dados-liquidacao.service.ts
+|   |   |   |-- dados-repasse
+|   |   |   |   |-- dados-repasse.service.spec.ts
+|   |   |   |   |-- dados-repasse.service.ts
+|   |   |   |-- debito-pendente
+|   |   |   |   |-- debito-manual-pendente.service.spec.ts
+|   |   |   |   |-- debito-manual-pendente.service.ts
+|   |   |   |-- detalhamento
+|   |   |   |   |-- detalhamento.service.spec.ts
+|   |   |   |   |-- detalhamento.service.ts
+|   |   |   |-- exportacao-arquivo-relatorio-repasse
+|   |   |   |   |-- exportacao-arquivo-relatorio-repasse.service.spec.ts
+|   |   |   |   |-- exportacao-arquivo-relatorio-repasse.service.ts
+|   |   |   |-- formatador
+|   |   |   |   |-- formatador.service.spec.ts
+|   |   |   |   |-- formatador.service.ts
+|   |   |   |-- formatador-feedback
+|   |   |   |   |-- formatador-feedback.service.spec.ts
+|   |   |   |   |-- formatador-feedback.service.ts
+|   |   |   |-- formatador-option
+|   |   |   |   |-- formatador-option.service.spec.ts
+|   |   |   |   |-- formatador-option.service.ts
+|   |   |   |-- gerenciador-relatorio-movimentacao
+|   |   |   |   |-- gerenciador-relatorio-movimentacao.service.spec.ts
+|   |   |   |   |-- gerenciador-relatorio-movimentacao.service.ts
+|   |   |   |-- gerenciador-relatorio-remessa
+|   |   |   |   |-- gerenciador-relatorio-remessa.service.spec.ts
+|   |   |   |   |-- gerenciador-relatorio-remessa.service.ts
+|   |   |   |-- helper-service
+|   |   |   |   |-- helper.service.spec.ts
+|   |   |   |   |-- helper.service.ts
+|   |   |   |   |-- shared-request-helper.service.spec.ts
+|   |   |   |   |-- shared-request-helper.service.ts
+|   |   |   |-- historico-alteracao
+|   |   |   |   |-- historico-alteracao.service.spec.ts
+|   |   |   |   |-- historico-alteracao.service.ts
+|   |   |   |-- interacao-cobranca-relatorio-repasse
+|   |   |   |   |-- interacao-cobranca-relatorio-repasse.service.spec.ts
+|   |   |   |   |-- interacao-cobranca-relatorio-repasse.service.ts
+|   |   |   |-- interacao-contabil-relatorio-repasse
+|   |   |   |   |-- interacao-contabil-relatorio-repasse.service.spec.ts
+|   |   |   |   |-- interacao-contabil-relatorio-repasse.service.ts
+|   |   |   |-- interacao-liquidacao-relatorio-repasse
+|   |   |   |   |-- interacao-liquidacao-relatorio-repasse.service.spec.ts
+|   |   |   |   |-- interacao-liquidacao-relatorio-repasse.service.ts
+|   |   |   |-- interacao-repasse-relatorio-repasse
+|   |   |   |   |-- interacao-repasse-relatorio-repasse.service.spec.ts
+|   |   |   |   |-- interacao-repasse-relatorio-repasse.service.ts
+|   |   |   |-- lote-cobr
+|   |   |   |   |-- lote-cobr.service.spec.ts
+|   |   |   |   |-- lote-cobr.service.ts
+|   |   |   |-- manutencao-van
+|   |   |   |   |-- manutencao-van.service.spec.ts
+|   |   |   |   |-- manutencao-van.service.ts
+|   |   |   |-- parametro
+|   |   |   |   |-- parametro.service.spec.ts
+|   |   |   |   |-- parametro.service.ts
+|   |   |   |-- rec
+|   |   |   |   |-- rec.service.spec.ts
+|   |   |   |   |-- rec.service.ts
+|   |   |   |-- relatorio
+|   |   |   |   |-- relatorio.service.spec.ts
+|   |   |   |   |-- relatorio.service.ts
+|   |   |   |-- relatorio-repasses
+|   |   |   |   |-- relatorio-repasses.service.spec.ts
+|   |   |   |   |-- relatorio-repasses.service.ts
+|   |   |   |-- restricoes-cliente
+|   |   |   |   |-- restricoes-cliente.service.spec.ts
+|   |   |   |   |-- restricoes-cliente.service.ts
+|   |   |   |-- scroll
+|   |   |   |   |-- scroll.service.spec.ts
+|   |   |   |   |-- scroll.service.ts
+|   |   |   |-- simulador
+|   |   |   |   |-- simulador.service.spec.ts
+|   |   |   |   |-- simulador.service.ts
+|   |   |   |-- status-service
+|   |   |   |   |-- status-service.service.spec.ts
+|   |   |   |   |-- status-service.service.ts
+|   |   |   |-- url
+|   |   |   |   |-- url.service.spec.ts
+|   |   |   |   |-- url.service.ts
+|   |   |   |-- validators
+|   |   |   |   |-- cnpj
+|   |   |   |   |   |-- cnpj-validator.service.spec.ts
+|   |   |   |   |   |-- cnpj-validator.service.ts
+|   |   |   |   |-- convenio
+|   |   |   |   |   |-- convenio-validator.service.spec.ts
+|   |   |   |   |   |-- convenio-validator.service.ts
+|   |   |-- shared
+|   |   |   |-- agendamento
+|   |   |   |   |-- cancelar-agendamento
+|   |   |   |   |   |-- cancelar-agendamento.component.html
+|   |   |   |   |   |-- cancelar-agendamento.component.scss
+|   |   |   |   |   |-- cancelar-agendamento.component.spec.ts
+|   |   |   |   |   |-- cancelar-agendamento.component.ts
+|   |   |   |   |-- detalhamento-agendamento
+|   |   |   |   |   |-- detalhamento-agendamento.component.html
+|   |   |   |   |   |-- detalhamento-agendamento.component.spec.ts
+|   |   |   |   |   |-- detalhamento-agendamento.component.ts
+|   |   |   |   |-- lista-agendamento
+|   |   |   |   |   |-- lista-agendamento.component.html
+|   |   |   |   |   |-- lista-agendamento.component.scss
+|   |   |   |   |   |-- lista-agendamento.component.spec.ts
+|   |   |   |   |   |-- lista-agendamento.component.ts
+|   |   |   |   |   |-- lista-agendamento.helpers.spec.ts
+|   |   |   |   |   |-- lista-agendamento.helpers.ts
+|   |   |   |-- autorizacao
+|   |   |   |   |-- cancelar-autorizacao
+|   |   |   |   |   |-- cancelar-autorizacao.component.html
+|   |   |   |   |   |-- cancelar-autorizacao.component.scss
+|   |   |   |   |   |-- cancelar-autorizacao.component.spec.ts
+|   |   |   |   |   |-- cancelar-autorizacao.component.ts
+|   |   |   |   |-- detalhamento-autorizacao
+|   |   |   |   |   |-- detalhamento-autorizacao.component.html
+|   |   |   |   |   |-- detalhamento-autorizacao.component.spec.ts
+|   |   |   |   |   |-- detalhamento-autorizacao.component.ts
+|   |   |   |   |-- tabela-autorizacao
+|   |   |   |   |   |-- tabela-autorizacao.component.html
+|   |   |   |   |   |-- tabela-autorizacao.component.scss
+|   |   |   |   |   |-- tabela-autorizacao.component.spec.ts
+|   |   |   |   |   |-- tabela-autorizacao.component.ts
+|   |   |   |   |   |-- tabela-autorizacao.helpers.spec.ts
+|   |   |   |   |   |-- tabela-autorizacao.helpers.ts
+|   |   |   |-- campo-alteravel
+|   |   |   |   |-- campo-alteravel.component.html
+|   |   |   |   |-- campo-alteravel.component.scss
+|   |   |   |   |-- campo-alteravel.component.spec.ts
+|   |   |   |   |-- campo-alteravel.component.ts
+|   |   |   |-- card-icones-restricao
+|   |   |   |   |-- card-icones-restricao.component.html
+|   |   |   |   |-- card-icones-restricao.component.scss
+|   |   |   |   |-- card-icones-restricao.component.spec.ts
+|   |   |   |   |-- card-icones-restricao.component.ts
+|   |   |   |-- card-van
+|   |   |   |   |-- card-van.component.html
+|   |   |   |   |-- card-van.component.scss
+|   |   |   |   |-- card-van.component.spec.ts
+|   |   |   |   |-- card-van.component.ts
+|   |   |   |-- comparar-alteracao
+|   |   |   |   |-- comparar-alteracao.component.html
+|   |   |   |   |-- comparar-alteracao.component.scss
+|   |   |   |   |-- comparar-alteracao.component.spec.ts
+|   |   |   |   |-- comparar-alteracao.component.ts
+|   |   |   |-- constants
+|   |   |   |   |-- agendamento.constants.ts
+|   |   |   |   |-- agendamento-labels.constants.ts
+|   |   |   |   |-- autorizacao.constants.ts
+|   |   |   |   |-- autorizacao-labels.constants.ts
+|   |   |   |   |-- cliente.constants.ts
+|   |   |   |   |-- convenio.constants.ts
+|   |   |   |   |-- fetch-utils.constants.ts
+|   |   |   |   |-- historico-alteracao.constants.ts
+|   |   |   |   |-- incluir-convenio.constants.ts
+|   |   |   |   |-- manutencao-van.constants.ts
+|   |   |   |   |-- niveis-hierarquicos.constants.ts
+|   |   |   |   |-- permissao.constants.ts
+|   |   |   |   |-- politica-retentativa.constants.ts
+|   |   |   |   |-- servico-compartilhado.constants.ts
+|   |   |   |   |-- simulador.constants.ts
+|   |   |   |   |-- solicitante-encerramento.constants.ts
+|   |   |   |   |-- status.constants.ts
+|   |   |   |   |-- status-gerais-descricao.contants.ts
+|   |   |   |   |-- tipo-jornada.constants.ts
+|   |   |   |   |-- utils
+|   |   |   |   |   |-- cnpj.constants.ts
+|   |   |   |   |-- utils.constants.ts
+|   |   |   |-- consulta-apelido-van
+|   |   |   |   |-- consulta-apelido-van.component.html
+|   |   |   |   |-- consulta-apelido-van.component.scss
+|   |   |   |   |-- consulta-apelido-van.component.spec.ts
+|   |   |   |   |-- consulta-apelido-van.component.ts
+|   |   |   |-- convenio
+|   |   |   |   |-- alterar
+|   |   |   |   |   |-- card-detalhes
+|   |   |   |   |   |   |-- card-detalhes.component.html
+|   |   |   |   |   |   |-- card-detalhes.component.scss
+|   |   |   |   |   |   |-- card-detalhes.component.spec.ts
+|   |   |   |   |   |   |-- card-detalhes.component.ts
+|   |   |   |   |   |-- card-tarifas
+|   |   |   |   |   |   |-- card-tarifas.component.html
+|   |   |   |   |   |   |-- card-tarifas.component.spec.ts
+|   |   |   |   |   |   |-- card-tarifas.component.ts
+|   |   |   |   |   |-- formulario-alterar-convenio
+|   |   |   |   |   |   |-- formulario-alterar-convenio.component.html
+|   |   |   |   |   |   |-- formulario-alterar-convenio.component.scss
+|   |   |   |   |   |   |-- formulario-alterar-convenio.component.spec.ts
+|   |   |   |   |   |   |-- formulario-alterar-convenio.component.ts
+|   |   |   |   |-- config
+|   |   |   |   |   |-- make-campo-convenio-config.factory.ts
+|   |   |   |   |-- consultar
+|   |   |   |   |   |-- card-consulta
+|   |   |   |   |   |   |-- card-consulta.component.html
+|   |   |   |   |   |   |-- card-consulta.component.scss
+|   |   |   |   |   |   |-- card-consulta.component.spec.ts
+|   |   |   |   |   |   |-- card-consulta.component.ts
+|   |   |   |   |   |-- tabela-convenios
+|   |   |   |   |   |   |-- tabela-convenios.component.html
+|   |   |   |   |   |   |-- tabela-convenios.component.scss
+|   |   |   |   |   |   |-- tabela-convenios.component.spec.ts
+|   |   |   |   |   |   |-- tabela-convenios.component.ts
+|   |   |   |   |-- contrato
+|   |   |   |   |   |-- contrato-convenio
+|   |   |   |   |   |   |-- contrato-convenio.component.html
+|   |   |   |   |   |   |-- contrato-convenio.component.scss
+|   |   |   |   |   |   |-- contrato-convenio.component.spec.ts
+|   |   |   |   |   |   |-- contrato-convenio.component.ts
+|   |   |   |   |-- detalhar
+|   |   |   |   |   |-- card-contato
+|   |   |   |   |   |   |-- card-contato.component.html
+|   |   |   |   |   |   |-- card-contato.component.scss
+|   |   |   |   |   |   |-- card-contato.component.spec.ts
+|   |   |   |   |   |   |-- card-contato.component.ts
+|   |   |   |   |   |-- card-dados-assinaturas
+|   |   |   |   |   |   |-- card-dados-assinaturas.component.html
+|   |   |   |   |   |   |-- card-dados-assinaturas.component.scss
+|   |   |   |   |   |   |-- card-dados-assinaturas.component.spec.ts
+|   |   |   |   |   |   |-- card-dados-assinaturas.component.ts
+|   |   |   |   |   |-- card-dados-pix-automatico
+|   |   |   |   |   |   |-- card-dados-pix-automatico.component.html
+|   |   |   |   |   |   |-- card-dados-pix-automatico.component.scss
+|   |   |   |   |   |   |-- card-dados-pix-automatico.component.spec.ts
+|   |   |   |   |   |   |-- card-dados-pix-automatico.component.ts
+|   |   |   |   |   |-- card-endereco
+|   |   |   |   |   |   |-- card-endereco.component.html
+|   |   |   |   |   |   |-- card-endereco.component.scss
+|   |   |   |   |   |   |-- card-endereco.component.spec.ts
+|   |   |   |   |   |   |-- card-endereco.component.ts
+|   |   |   |   |   |-- card-info-geral
+|   |   |   |   |   |   |-- card-info-geral.component.html
+|   |   |   |   |   |   |-- card-info-geral.component.scss
+|   |   |   |   |   |   |-- card-info-geral.component.spec.ts
+|   |   |   |   |   |   |-- card-info-geral.component.ts
+|   |   |   |   |   |-- components
+|   |   |   |   |   |   |-- modal-confirmacao-desbloquear-convenio
+|   |   |   |   |   |   |   |-- modal-confirmacao-desbloquear-convenio.component.html
+|   |   |   |   |   |   |   |-- modal-confirmacao-desbloquear-convenio.component.scss
+|   |   |   |   |   |   |   |-- modal-confirmacao-desbloquear-convenio.component.spec.ts
+|   |   |   |   |   |   |   |-- modal-confirmacao-desbloquear-convenio.component.ts
+|   |   |   |   |   |-- detalhar-convenio
+|   |   |   |   |   |   |-- detalhar-convenio.component.html
+|   |   |   |   |   |   |-- detalhar-convenio.component.scss
+|   |   |   |   |   |   |-- detalhar-convenio.component.spec.ts
+|   |   |   |   |   |   |-- detalhar-convenio.component.ts
+|   |   |   |   |-- incluir
+|   |   |   |   |   |-- card-assinaturas-geral
+|   |   |   |   |   |   |-- card-assinaturas-geral.component.html
+|   |   |   |   |   |   |-- card-assinaturas-geral.component.scss
+|   |   |   |   |   |   |-- card-assinaturas-geral.component.spec.ts
+|   |   |   |   |   |   |-- card-assinaturas-geral.component.ts
+|   |   |   |   |   |-- card-dados-cadastrais
+|   |   |   |   |   |   |-- card-dados-cadastrais.component.html
+|   |   |   |   |   |   |-- card-dados-cadastrais.component.spec.ts
+|   |   |   |   |   |   |-- card-dados-cadastrais.component.ts
+|   |   |   |   |   |-- card-parametros
+|   |   |   |   |   |   |-- card-parametros.component.html
+|   |   |   |   |   |   |-- card-parametros.component.scss
+|   |   |   |   |   |   |-- card-parametros.component.spec.ts
+|   |   |   |   |   |   |-- card-parametros.component.ts
+|   |   |   |   |   |-- card-tarifas
+|   |   |   |   |   |   |-- card-tarifas.component.html
+|   |   |   |   |   |   |-- card-tarifas.component.scss
+|   |   |   |   |   |   |-- card-tarifas.component.spec.ts
+|   |   |   |   |   |   |-- card-tarifas.component.ts
+|   |   |   |   |   |-- incluir-convenio
+|   |   |   |   |   |   |-- incluir-convenio.component.html
+|   |   |   |   |   |   |-- incluir-convenio.component.scss
+|   |   |   |   |   |   |-- incluir-convenio.component.spec.ts
+|   |   |   |   |   |   |-- incluir-convenio.component.ts
+|   |   |   |   |   |-- modal
+|   |   |   |   |   |   |-- confirmar-inclusao-convenio
+|   |   |   |   |   |   |   |-- confirmar-inclusao-convenio.component.html
+|   |   |   |   |   |   |   |-- confirmar-inclusao-convenio.component.scss
+|   |   |   |   |   |   |   |-- confirmar-inclusao-convenio.component.spec.ts
+|   |   |   |   |   |   |   |-- confirmar-inclusao-convenio.component.ts
+|   |   |   |   |   |   |-- direcionar-simulador
+|   |   |   |   |   |   |   |-- direcionar-simulador.component.html
+|   |   |   |   |   |   |   |-- direcionar-simulador.component.scss
+|   |   |   |   |   |   |   |-- direcionar-simulador.component.spec.ts
+|   |   |   |   |   |   |   |-- direcionar-simulador.component.ts
+|   |   |   |   |   |   |-- incluir-assinante
+|   |   |   |   |   |   |   |-- incluir-assinante.component.html
+|   |   |   |   |   |   |   |-- incluir-assinante.component.scss
+|   |   |   |   |   |   |   |-- incluir-assinante.component.spec.ts
+|   |   |   |   |   |   |   |-- incluir-assinante.component.ts
+|   |   |   |-- day-picker
+|   |   |   |   |-- day-picker.component.html
+|   |   |   |   |-- day-picker.component.scss
+|   |   |   |   |-- day-picker.component.spec.ts
+|   |   |   |   |-- day-picker.component.ts
+|   |   |   |-- detalhamento
+|   |   |   |   |-- detalhamento.component.html
+|   |   |   |   |-- detalhamento.component.scss
+|   |   |   |   |-- detalhamento.component.spec.ts
+|   |   |   |   |-- detalhamento.component.ts
+|   |   |   |-- enums
+|   |   |   |   |-- politica-retentativa.enum.ts
+|   |   |   |   |-- solicitante-encerramento.enum.ts
+|   |   |   |   |-- status-gerais.enum.ts
+|   |   |   |   |-- status-restricao-cliente.enum.ts
+|   |   |   |   |-- tipo-jornada.enum.ts
+|   |   |   |-- errors
+|   |   |   |   |-- erro-alterar-parametros.ts
+|   |   |   |   |-- erro-api-sem-dados.ts
+|   |   |   |   |-- erro-buscar-dados.ts
+|   |   |   |   |-- erro-cancelar-simulacao.ts
+|   |   |   |   |-- erro-enviar-avaliacao-simulacao.ts
+|   |   |   |   |-- erro-enviar-contraproposta-avaliacao-simulacao.ts
+|   |   |   |   |-- erro-generico-api.ts
+|   |   |   |   |-- erro-generico-interno.ts
+|   |   |   |   |-- erro-obter-parametros.ts
+|   |   |   |   |-- erro-obter-simulacoes-pendentes-unidade.ts
+|   |   |   |   |-- erro-retorno-sicli.ts
+|   |   |   |   |-- handlers
+|   |   |   |   |   |-- abort-error
+|   |   |   |   |   |   |-- abort-error-handler.spec.ts
+|   |   |   |   |   |   |-- abort-error-handler.ts
+|   |   |   |   |   |-- erro-generico-api
+|   |   |   |   |   |   |-- erro-generico-api-handler.spec.ts
+|   |   |   |   |   |   |-- erro-generico-api-handler.ts
+|   |   |   |-- filtro-data-mes-ano
+|   |   |   |   |-- filtro-data-mes-ano.component.html
+|   |   |   |   |-- filtro-data-mes-ano.component.scss
+|   |   |   |   |-- filtro-data-mes-ano.component.spec.ts
+|   |   |   |   |-- filtro-data-mes-ano.component.ts
+|   |   |   |-- filtro-dinamico
+|   |   |   |   |-- filtro-dinamico.component.html
+|   |   |   |   |-- filtro-dinamico.component.scss
+|   |   |   |   |-- filtro-dinamico.component.spec.ts
+|   |   |   |   |-- filtro-dinamico.component.ts
+|   |   |   |-- filtro-relatorio-movimentacao
+|   |   |   |   |-- filtro-relatorio-movimentacao.component.html
+|   |   |   |   |-- filtro-relatorio-movimentacao.component.scss
+|   |   |   |   |-- filtro-relatorio-movimentacao.component.spec.ts
+|   |   |   |   |-- filtro-relatorio-movimentacao.component.ts
+|   |   |   |-- header
+|   |   |   |   |-- header.component.html
+|   |   |   |   |-- header.component.scss
+|   |   |   |   |-- header.component.spec.ts
+|   |   |   |   |-- header.component.ts
+|   |   |   |-- historico-alteracoes-convenio
+|   |   |   |   |-- historico-alteracoes-convenio.component.html
+|   |   |   |   |-- historico-alteracoes-convenio.component.scss
+|   |   |   |   |-- historico-alteracoes-convenio.component.spec.ts
+|   |   |   |   |-- historico-alteracoes-convenio.component.ts
+|   |   |   |-- lista-van
+|   |   |   |   |-- lista-van.component.html
+|   |   |   |   |-- lista-van.component.scss
+|   |   |   |   |-- lista-van.component.spec.ts
+|   |   |   |   |-- lista-van.component.ts
+|   |   |   |-- modal
+|   |   |   |   |-- avaliar-alteracao-convenio
+|   |   |   |   |   |-- avaliar-alteracao-convenio.component.html
+|   |   |   |   |   |-- avaliar-alteracao-convenio.component.scss
+|   |   |   |   |   |-- avaliar-alteracao-convenio.component.spec.ts
+|   |   |   |   |   |-- avaliar-alteracao-convenio.component.ts
+|   |   |   |   |-- avaliar-convenio
+|   |   |   |   |   |-- avaliar-convenio.component.html
+|   |   |   |   |   |-- avaliar-convenio.component.scss
+|   |   |   |   |   |-- avaliar-convenio.component.spec.ts
+|   |   |   |   |   |-- avaliar-convenio.component.ts
+|   |   |   |   |-- avaliar-simulacao
+|   |   |   |   |   |-- avaliar-simulacao.component.html
+|   |   |   |   |   |-- avaliar-simulacao.component.scss
+|   |   |   |   |   |-- avaliar-simulacao.component.spec.ts
+|   |   |   |   |   |-- avaliar-simulacao.component.ts
+|   |   |   |   |-- cancelar-generico
+|   |   |   |   |   |-- cancelar-generico.component.html
+|   |   |   |   |   |-- cancelar-generico.component.scss
+|   |   |   |   |   |-- cancelar-generico.component.spec.ts
+|   |   |   |   |   |-- cancelar-generico.component.ts
+|   |   |   |   |-- confirmar-alteracao-convenio
+|   |   |   |   |   |-- confirmar-alteracao-convenio.component.html
+|   |   |   |   |   |-- confirmar-alteracao-convenio.component.scss
+|   |   |   |   |   |-- confirmar-alteracao-convenio.component.spec.ts
+|   |   |   |   |   |-- confirmar-alteracao-convenio.component.ts
+|   |   |   |   |-- convenio-pendente
+|   |   |   |   |   |-- convenio-pendente.component.html
+|   |   |   |   |   |-- convenio-pendente.component.scss
+|   |   |   |   |   |-- convenio-pendente.component.spec.ts
+|   |   |   |   |   |-- convenio-pendente.component.ts
+|   |   |   |   |-- detalhamento-alteracao-convenio
+|   |   |   |   |   |-- detalhamento-alteracao-convenio.component.html
+|   |   |   |   |   |-- detalhamento-alteracao-convenio.component.scss
+|   |   |   |   |   |-- detalhamento-alteracao-convenio.component.spec.ts
+|   |   |   |   |   |-- detalhamento-alteracao-convenio.component.ts
+|   |   |   |   |-- excluir-van
+|   |   |   |   |   |-- excluir-van.component.html
+|   |   |   |   |   |-- excluir-van.component.scss
+|   |   |   |   |   |-- excluir-van.component.spec.ts
+|   |   |   |   |   |-- excluir-van.component.ts
+|   |   |   |   |-- feedback-alteracao-convenio
+|   |   |   |   |   |-- feedback-alteracao-convenio.component.html
+|   |   |   |   |   |-- feedback-alteracao-convenio.component.scss
+|   |   |   |   |   |-- feedback-alteracao-convenio.component.spec.ts
+|   |   |   |   |   |-- feedback-alteracao-convenio.component.ts
+|   |   |   |   |-- feedback-generico
+|   |   |   |   |   |-- feedback-generico.component.html
+|   |   |   |   |   |-- feedback-generico.component.scss
+|   |   |   |   |   |-- feedback-generico.component.spec.ts
+|   |   |   |   |   |-- feedback-generico.component.ts
+|   |   |   |   |-- formulario-incluir-van
+|   |   |   |   |   |-- formulario-incluir-van.component.html
+|   |   |   |   |   |-- formulario-incluir-van.component.scss
+|   |   |   |   |   |-- formulario-incluir-van.component.spec.ts
+|   |   |   |   |   |-- formulario-incluir-van.component.ts
+|   |   |   |   |-- habilitar-desabilitar-van
+|   |   |   |   |   |-- habilitar-desabilitar-van.component.html
+|   |   |   |   |   |-- habilitar-desabilitar-van.component.scss
+|   |   |   |   |   |-- habilitar-desabilitar-van.component.spec.ts
+|   |   |   |   |   |-- habilitar-desabilitar-van.component.ts
+|   |   |   |   |-- resumo-simulacao
+|   |   |   |   |   |-- resumo-simulacao.component.html
+|   |   |   |   |   |-- resumo-simulacao.component.scss
+|   |   |   |   |   |-- resumo-simulacao.component.spec.ts
+|   |   |   |   |   |-- resumo-simulacao.component.ts
+|   |   |   |   |-- simulacao-pendente
+|   |   |   |   |   |-- simulacao-pendente.component.html
+|   |   |   |   |   |-- simulacao-pendente.component.scss
+|   |   |   |   |   |-- simulacao-pendente.component.spec.ts
+|   |   |   |   |   |-- simulacao-pendente.component.ts
+|   |   |   |-- models
+|   |   |   |   |-- autorizacao-agendamento
+|   |   |   |   |   |-- cobr.enum.ts
+|   |   |   |   |   |-- cobr.model.ts
+|   |   |   |   |   |-- lote-cobr.model.ts
+|   |   |   |   |   |-- rec.enum.ts
+|   |   |   |   |   |-- rec.model.ts
+|   |   |   |   |   |-- utils.enum.ts
+|   |   |   |   |-- cancelar-generico.model.ts
+|   |   |   |   |-- cliente.model.ts
+|   |   |   |   |-- convenio
+|   |   |   |   |   |-- convenio.model.ts
+|   |   |   |   |   |-- convenio-detalhamento.model.ts
+|   |   |   |   |   |-- convenio-pendente.model.ts
+|   |   |   |   |   |-- incluir-convenio.model.ts
+|   |   |   |   |   |-- solicitacao-alteracao.model.ts
+|   |   |   |   |-- detalhamento-adapter.model.ts
+|   |   |   |   |-- detalhamento-bloco.model.ts
+|   |   |   |   |-- formatador-utils.model.ts
+|   |   |   |   |-- formularioAlterarConvenio.model.ts
+|   |   |   |   |-- index.ts
+|   |   |   |   |-- manutencao-van.model.ts
+|   |   |   |   |-- mensagem-inconsistencia.model.ts
+|   |   |   |   |-- parametros.model.ts
+|   |   |   |   |-- parametros-tarifa.model.ts
+|   |   |   |   |-- relatorio-movimentacao.model.ts
+|   |   |   |   |-- relatorio-repasses.model.ts
+|   |   |   |   |-- requisicao.model.ts
+|   |   |   |   |-- simulacoes-pendentes.model.ts
+|   |   |   |   |-- simulador.model.ts
+|   |   |   |   |-- utils
+|   |   |   |   |   |-- erro-handler.model.ts
+|   |   |   |   |   |-- filtro-dinamico.model.ts
+|   |   |   |   |   |-- paginacao.model.ts
+|   |   |   |   |   |-- query-params.model.ts
+|   |   |   |-- parametros-gerais
+|   |   |   |   |-- excluir-email-notificacao
+|   |   |   |   |   |-- excluir-email-notificacao.component.html
+|   |   |   |   |   |-- excluir-email-notificacao.component.scss
+|   |   |   |   |   |-- excluir-email-notificacao.component.spec.ts
+|   |   |   |   |   |-- excluir-email-notificacao.component.ts
+|   |   |   |   |-- incluir-email-notificacao
+|   |   |   |   |   |-- incluir-email-notificacao.component.html
+|   |   |   |   |   |-- incluir-email-notificacao.component.scss
+|   |   |   |   |   |-- incluir-email-notificacao.component.spec.ts
+|   |   |   |   |   |-- incluir-email-notificacao.component.ts
+|   |   |   |   |-- notificacao-email
+|   |   |   |   |   |-- notificacao-email.component.html
+|   |   |   |   |   |-- notificacao-email.component.scss
+|   |   |   |   |   |-- notificacao-email.component.spec.ts
+|   |   |   |   |   |-- notificacao-email.component.ts
+|   |   |   |-- parametros-tarifa
+|   |   |   |   |-- desconto-alcada
+|   |   |   |   |   |-- desconto-alcada.component.html
+|   |   |   |   |   |-- desconto-alcada.component.spec.ts
+|   |   |   |   |   |-- desconto-alcada.component.ts
+|   |   |   |   |-- indice-tarifas
+|   |   |   |   |   |-- indice-tarifas.component.html
+|   |   |   |   |   |-- indice-tarifas.component.scss
+|   |   |   |   |   |-- indice-tarifas.component.spec.ts
+|   |   |   |   |   |-- indice-tarifas.component.ts
+|   |   |   |   |-- parametros-enum-map.ts
+|   |   |   |-- resumo-van
+|   |   |   |   |-- resumo-van.component.html
+|   |   |   |   |-- resumo-van.component.scss
+|   |   |   |   |-- resumo-van.component.spec.ts
+|   |   |   |   |-- resumo-van.component.ts
+|   |   |   |-- shared.module.ts
+|   |   |   |-- tabelas
+|   |   |   |   |-- tabela-base
+|   |   |   |   |   |-- tabela-base.component.html
+|   |   |   |   |   |-- tabela-base.component.scss
+|   |   |   |   |   |-- tabela-base.component.spec.ts
+|   |   |   |   |   |-- tabela-base.component.ts
+|   |   |   |   |-- tabela-comum-detalhe
+|   |   |   |   |   |-- tabela-comum-detalhe.component.html
+|   |   |   |   |   |-- tabela-comum-detalhe.component.scss
+|   |   |   |   |   |-- tabela-comum-detalhe.component.spec.ts
+|   |   |   |   |   |-- tabela-comum-detalhe.component.ts
+|   |   |   |   |-- tabela-detalhamento-agendamento
+|   |   |   |   |   |-- tabela-detalhamento-agendamento.component.html
+|   |   |   |   |   |-- tabela-detalhamento-agendamento.component.scss
+|   |   |   |   |   |-- tabela-detalhamento-agendamento.component.spec.ts
+|   |   |   |   |   |-- tabela-detalhamento-agendamento.component.ts
+|   |   |   |   |-- tabela-exibe-icones
+|   |   |   |   |   |-- tabela-exibe-icones.component.html
+|   |   |   |   |   |-- tabela-exibe-icones.component.scss
+|   |   |   |   |   |-- tabela-exibe-icones.component.spec.ts
+|   |   |   |   |   |-- tabela-exibe-icones.component.ts
+|   |   |   |   |-- tabela-icone
+|   |   |   |   |   |-- tabela-icone.component.html
+|   |   |   |   |   |-- tabela-icone.component.spec.ts
+|   |   |   |   |   |-- tabela-icone.component.ts
+|   |   |   |   |-- tabela-resumo-agendamento
+|   |   |   |   |   |-- tabela-resumo-agendamento.component.html
+|   |   |   |   |   |-- tabela-resumo-agendamento.component.scss
+|   |   |   |   |   |-- tabela-resumo-agendamento.component.spec.ts
+|   |   |   |   |   |-- tabela-resumo-agendamento.component.ts
+|   |   |   |-- utils
+|   |   |   |   |-- conta
+|   |   |   |   |   |-- conta.utils.spec.ts
+|   |   |   |   |   |-- conta.utils.ts
+|   |   |   |   |-- data
+|   |   |   |   |   |-- data.utils.spec.ts
+|   |   |   |   |   |-- data.utils.ts
+|   |   |   |   |-- documento
+|   |   |   |   |   |-- documento.utils.spec.ts
+|   |   |   |   |   |-- documento.utils.ts
+|   |   |   |   |-- query
+|   |   |   |   |   |-- query.utils.spec.ts
+|   |   |   |   |   |-- query.utils.ts
+|   |   |   |   |-- string
+|   |   |   |   |   |-- string.utils.spec.ts
+|   |   |   |   |   |-- string.utils.ts
+|   |-- assets
+|   |   |-- .gitkeep
+|   |   |-- caixa
+|   |   |   |-- caixa-logo-1.png
+|   |   |   |-- caixa-logo-2.png
+|   |   |   |-- hubmed4.png
+|   |   |   |-- hubmed4border.png
+|   |   |   |-- hubmed4medalpha.png
+|   |   |   |-- hubsmall4.png
+|   |   |-- people.png
+|   |   |-- people100.png
+|   |-- environments
+|   |   |-- environment.prod.ts
+|   |   |-- environment.ts
+|   |-- favicon.ico
+|   |-- index.html
+|   |-- main.single-spa.ts
+|   |-- main.ts
+|   |-- single-spa
+|   |   |-- asset-url.ts
+|   |   |-- single-spa-props.ts
+|   |-- styles
+|   |   |-- _cores.scss
+|   |   |-- status.scss
+|   |-- styles.scss
+|   |-- test-helpers
+|   |   |-- convenio
+|   |   |   |-- environment-test-setup.ts
+|   |   |   |-- functions.ts
+|   |   |   |-- mockAlterarConvenio.ts
+|   |   |   |-- mockConsultaConvenio.ts
+|   |   |   |-- mockConvenioPendente.ts
+|   |   |   |-- mockConveniosPendentes.ts
+|   |   |   |-- mockDadosCadastrais.ts
+|   |   |   |-- mockDetalharConvenio.ts
+|   |   |   |-- mockDetalheAlteracao.ts
+|   |   |   |-- mockHistoricoAlteracao.ts
+|   |   |   |-- mockIncluirContrato.ts
+|   |   |   |-- mockIncluirConvenio.ts
+|   |   |   |-- mockMudancasConvenio.ts
+|   |   |   |-- mockParametroVan.ts
+|   |   |-- createMockDebitoManualPendente.ts
+|   |   |-- createMocks.ts
+|   |   |-- createMockTarifa.ts
+|   |   |-- geral
+|   |   |   |-- createMockModal.ts
+|   |   |-- simulador
+|   |   |   |-- mockSimulacaoPendente.ts
+|   |   |-- simuladorService
+|   |   |   |-- mockDetalhamento.ts
+|   |-- version
+|   |   |-- version.ts
+|-- tsconfig.app.json
+|-- tsconfig.json
+|-- tsconfig.spec.json
