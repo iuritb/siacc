@@ -1,0 +1,38 @@
+.cabecalho-card {
+  background-color: var(--dsc-color-bg-highlight-1) !important;
+  border: 0px solid transparent !important;
+  border-radius: 1rem !important;
+}
+
+.cliente-label {
+  font: var(--dsc-typography-text-standard-600);
+  color: var(--dsc-color-primary-90);
+}
+
+.cliente-content {
+  font: var(--dsc-typography-text-standard-400);
+}
+
+.cliente-icon {
+  font-size: var(--dsc-font-size-larger);
+  color: var(--dsc-color-bg-highlight-5);
+  border-radius: var(--dsc-border-radius-none);
+  width: auto;
+  height: auto;
+}
+
+.client-warning {
+  color: var(--bs-orange) ! important;
+}
+
+.client-disabled {
+  color: var(--bs-gray-300) ! important;
+}
+
+.client-ok {
+  color: var(--dsc-color-bg-highlight-5) ! important;
+}
+
+.small400 {
+  font: var(--dsc-typography-text-small-400);
+}
