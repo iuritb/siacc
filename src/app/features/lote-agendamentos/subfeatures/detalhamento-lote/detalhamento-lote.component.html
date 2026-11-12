@@ -1,0 +1,191 @@
+<section data-qa="detalhamento-lote-wrapper">
+  <div class="d-grid gap-3 p-4" data-qa="detalhamento-lote-conteudo-wrapper">
+    <div data-qa="detalhamento-lote-cabecalho-wrapper">
+      <span class="application-subtitle" data-qa="detalhamento-lote-subtitulo">Autorizações/Agendamentos</span>
+      <div class="row d-flex flex-wrap align-items-center justify-content-between"
+        data-qa="detalhamento-lote-cabecalho-linha">
+        <div class="col-auto" data-qa="detalhamento-lote-titulo-wrapper">
+          <h2 class="dsc-tx-azu-st btx-tx-md-fw7-120 rfe-sz-29" data-qa="detalhamento-lote-titulo">
+            <mat-icon class="material-icons application-icon" data-qa="detalhamento-lote-titulo-icone">pix</mat-icon>
+            <span class="application-title" data-qa="detalhamento-lote-titulo-texto">Agendamentos do lote</span>
+          </h2>
+        </div>
+        <div class="col-auto mb-2" data-qa="detalhamento-lote-btn-voltar-topo-wrapper">
+          <dsc-button data-qa="detalhamento-lote-btn-voltar-topo" label="Voltar" variant="auxiliary" size="small"
+            (click)="voltarTabela()"></dsc-button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading(); else conteudoDetalhamento" data-qa="detalhamento-lote-loading-wrapper">
+      <div class="pe-2" data-qa="detalhamento-lote-spinner-wrapper">
+        <dsc-progress-spinner data-qa="detalhamento-lote-spinner" [size]="20" [indeterminate]="true"
+          label="Carregando"></dsc-progress-spinner>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #conteudoDetalhamento>
+  <div class="d-grid gap-3 p-4" *ngIf="!mensagemErro(); else alertErro"
+    data-qa="detalhamento-lote-conteudo-lista-wrapper">
+    <div data-qa="detalhamento-lote-header-wrapper">
+      <app-header data-qa="detalhamento-lote-header" [dadoPrimario]="parametroPrimarioHeader()"
+        [dadoSecundario]="parametroSecundarioHeader()">
+      </app-header>
+    </div>
+
+    <div class="card p-4 gap-4" *ngIf="cobsrFormatados().length > 0; else semAgendamentos"
+      data-qa="detalhamento-lote-lista-wrapper">
+      <div class="card shadow shadow-sm" *ngFor="let cob of cobsrFormatados(); let i = index; trackBy: trackByTxid"
+        [attr.data-qa]="'detalhamento-lote-card-' + i">
+        <div class="card-body row d-flex" [attr.data-qa]="'detalhamento-lote-card-corpo-' + i">
+
+          <div class="col-11 row d-flex flex-wrap gap-3" [attr.data-qa]="'detalhamento-lote-colunas-wrapper-' + i">
+
+            <div class="col-3" [attr.data-qa]="'detalhamento-lote-coluna-status-' + i">
+              <div class="titulo-card" [attr.data-qa]="'detalhamento-lote-label-status-' + i">Status da Cobrança</div>
+              <div [attr.data-qa]="'detalhamento-lote-coluna-status-wrapper-' + i">
+                <div class="text-large-600" [ngClass]="definirClasseStatus(cob.situacao, cob.status)"
+                  [attr.data-qa]="'detalhamento-lote-status-' + i">{{ cob.statusFormatado }}
+                </div>
+                <div class="caption-12-400" [attr.data-qa]="'detalhamento-lote-data-status-' + i">
+                  Último status: {{ cob.dataHoraStatusFormatada }}
+                </div>
+              </div>
+
+            </div>
+
+            <ng-container
+              [ngTemplateOutlet]="cob.situacao === enumSituacaoCobrDoLote.SUCESSO ? colunasSucesso : colunasErro"
+              [ngTemplateOutletContext]="{ cob: cob, index: i }">
+            </ng-container>
+          </div>
+
+          <div class="col-1 d-flex flex-column align-items-center"
+            [attr.data-qa]="'lista-agendamento-coluna-acoes-' + i">
+            <div class="titulo-card" [attr.data-qa]="'lista-agendamento-label-acoes-' + i">Ações</div>
+            <div class="d-flex flex-column align-items-center gap-2"
+              [attr.data-qa]="'lista-agendamento-acoes-wrapper-' + i">
+              <dsc-button dscTooltip="Detalhar Agendamento" dscTooltipVariant="highlight" dscTooltipPosition="left"
+                variant="secondary-outlined" iconButton="true" icon="visibility" size="small"
+                [attr.data-qa]="'detalhamento-lote-btn-detalhar-' + i" (click)="detalharAgendamento(cob)">
+              </dsc-button>
+
+              <dsc-button dscTooltip="Copiar TxID" dscTooltipVariant="highlight" dscTooltipPosition="left"
+                variant="secondary-outlined" iconButton="true" icon="content_copy" size="small"
+                [attr.data-qa]="'detalhamento-lote-btn-copiar-txid-' + i" (click)="copiarTexto(cob.txid)">
+              </dsc-button>
+
+              <div [dscTooltip]="obterTooltipCancelamento(cob)" dscTooltipVariant="highlight" dscTooltipPosition="left"
+                [attr.data-qa]="'detalhamento-lote-btn-cancelar-wrapper-' + i">
+                <dsc-button variant="danger-outlined" iconButton="true" icon="delete" size="small"
+                  [attr.data-qa]="'detalhamento-lote-btn-cancelar-' + i" [disabled]="!podeCancelar(cob)"
+                  (click)="abrirModalCancelamento(cob)">
+                </dsc-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator data-qa="detalhamento-lote-paginador" [length]="paginacaoAtual().totalRegistros"
+        [pageSize]="paginacaoAtual().itensPorPagina" [pageIndex]="paginacaoAtual().paginaAtual"
+        (page)="onPageChange($event)" [pageSizeOptions]="pageSizeOptions">
+      </mat-paginator>
+    </div>
+
+    <div class="d-flex justify-content-end align-items-center" data-qa="detalhamento-lote-btn-voltar-rodape-wrapper">
+      <dsc-button data-qa="detalhamento-lote-btn-voltar-rodape" variant="auxiliary" label="Voltar" size="small"
+        (click)="voltarTabela()"></dsc-button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #colunasErro let-cob="cob" let-i="index">
+  <div class="col-8" [attr.data-qa]="'detalhamento-lote-coluna-erro-' + i">
+    <div class="titulo-card" [attr.data-qa]="'detalhamento-lote-label-erro-' + i">Retorno dos Erros</div>
+    <ng-container *ngIf="cob.ultimaIntegracao?.retorno as retorno; else semRetornoErro">
+      <div class="d-flex flex-column gap-1" [attr.data-qa]="'detalhamento-lote-erro-wrapper-' + i">
+        <div *ngIf="retorno.status" class="text-large-400" [attr.data-qa]="'detalhamento-lote-erro-status-http-' + i">
+          <span class="caption-12-400">Código HTTP: </span>{{ retorno.status }}
+        </div>
+        <div *ngIf="retorno.title" class="text-large-400" [attr.data-qa]="'detalhamento-lote-erro-titulo-' + i">
+          <span class="caption-12-400">Título: </span>{{ retorno.title }}
+        </div>
+        <div *ngIf="retorno.detail" class="text-large-400" [attr.data-qa]="'detalhamento-lote-erro-detalhe-' + i">
+          <span class="caption-12-400">Detalhe: </span>{{ retorno.detail }}
+        </div>
+        <div *ngIf="retorno.violacoes?.length" [attr.data-qa]="'detalhamento-lote-erro-violacoes-wrapper-' + i">
+          <span class="caption-12-400" [attr.data-qa]="'detalhamento-lote-erro-violacoes-label-' + i">Violações:</span>
+          <ul class="mb-0 ps-3" [attr.data-qa]="'detalhamento-lote-erro-violacoes-lista-' + i">
+            <li *ngFor="let violacao of retorno.violacoes; let j = index" class="text-large-400"
+              [attr.data-qa]="'detalhamento-lote-erro-violacao-' + i + '-' + j">
+              <span *ngIf="violacao.propriedade"
+                [attr.data-qa]="'detalhamento-lote-erro-violacao-propriedade-' + i + '-' + j">{{ violacao.propriedade }}: </span>
+              <span [attr.data-qa]="'detalhamento-lote-erro-violacao-razao-' + i + '-' + j">{{ violacao.razao ?? violacao.valor }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #semRetornoErro>
+      <div class="text-large-400" [attr.data-qa]="'detalhamento-lote-erro-sem-retorno-' + i">
+        Sem informações de retorno disponíveis.
+      </div>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #colunasSucesso let-cob="cob" let-i="index">
+  <div class="col-3" [attr.data-qa]="'detalhamento-lote-coluna-calendario-' + i">
+    <div class="titulo-card" [attr.data-qa]="'detalhamento-lote-label-calendario-' + i">Calendário</div>
+    <div class="text-large-400" [attr.data-qa]="'detalhamento-lote-valor-' + i">{{ cob.valorOriginalFormatado }}
+    </div>
+    <div class="text-large-400" [attr.data-qa]="'detalhamento-lote-vencimento-' + i">
+      <span class="caption-12-400">Vencimento: </span>{{ cob.dataVencimentoFormatada }}
+    </div>
+  </div>
+
+  <div class="col-3" [attr.data-qa]="'detalhamento-lote-coluna-devedor-' + i">
+    <div class="titulo-card" [attr.data-qa]="'detalhamento-lote-label-devedor-' + i">Devedor</div>
+    <div class="text-large-400" [attr.data-qa]="'detalhamento-lote-devedor-cidade-uf-' + i">{{
+      cob.documentoFormatado }}</div>
+    <div class="text-large-400" [attr.data-qa]="'detalhamento-lote-devedor-logradouro-' + i">
+      {{ cob.nomeFormatado }}
+    </div>
+  </div>
+
+  <div class="col-2" [attr.data-qa]="'detalhamento-lote-coluna-contrato-' + i">
+    <div class="titulo-card" [attr.data-qa]="'detalhamento-lote-label-contrato-' + i">Contrato</div>
+    <div class="text-large-400" [attr.data-qa]="'detalhamento-lote-contrato-valor-' + i">
+      {{ cob.contratoVinculoFormatado }}
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #alertErro>
+  <div *ngIf="mensagemErro() as erro" data-qa="detalhamento-lote-alert-erro-wrapper"
+    class="d-flex align-items-center gap-3 p-4">
+    <div class="flex-fill">
+      <dsc-alert data-qa="detalhamento-lote-alert-erro" variant="danger" [title]="erro.titulo"
+        [list]="erro.listaMensagem" showIcon="true" role="alert" aria-live="assertive">
+      </dsc-alert>
+    </div>
+    <div data-qa="detalhamento-lote-btn-voltar-erro-wrapper">
+      <dsc-button data-qa="detalhamento-lote-btn-voltar-erro" label="Voltar" variant="auxiliary" size="small"
+        (click)="voltarTabela()"></dsc-button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #semAgendamentos>
+  <div class="card p-4 gap-4" data-qa="detalhamento-lote-sem-resultados-wrapper">
+    <div class="card-body row d-flex justify-content-center align-items-center"
+      data-qa="detalhamento-lote-sem-resultados-conteudo">
+      <div class="text-large-400" data-qa="detalhamento-lote-sem-resultados-mensagem">
+        Nenhum agendamento encontrado para o lote selecionado.
+      </div>
+    </div>
+  </div>
+</ng-template>
