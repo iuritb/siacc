@@ -1,0 +1,349 @@
+// Importando arquivo com classes para cada status
+@use "./styles/status";
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use "@angular/material" as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$siacc-pixautomatico-frontend-primary: mat.define-palette(mat.$indigo-palette);
+$siacc-pixautomatico-frontend-accent: mat.define-palette(mat.$pink-palette,
+    A200,
+    A100,
+    A400);
+
+// The warn palette is optional (defaults to red).
+$siacc-pixautomatico-frontend-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$siacc-pixautomatico-frontend-theme: mat.define-light-theme((color: (primary: $siacc-pixautomatico-frontend-primary,
+        accent: $siacc-pixautomatico-frontend-accent,
+        warn: $siacc-pixautomatico-frontend-warn,
+      ),
+    ));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($siacc-pixautomatico-frontend-theme);
+
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Importing Bootstrap SCSS file. */
+@import "bootstrap/scss/bootstrap";
+
+* {
+  font-family: var(--dsc-font-family-1);
+}
+
+mat-form-field .mat-mdc-form-field-icon-suffix {
+  font-family: inherit;
+}
+
+.mfe-identity {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.mfe-versao {
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+.favorite-icon {
+  color: var(--dsc-color-secondary-70) !important;
+}
+
+dsc-breadcrumb .breadcrumb {
+  margin-bottom: 0px !important;
+  margin-top: 5px !important;
+}
+
+section.fc {
+  min-height: fit-content;
+}
+
+h1,
+h2 {
+  color: var(--dsc-color-primary-90);
+}
+
+a {
+  color: var(--dsc-color-content-highlight-1);
+  font: var(--dsc-typography-text-standard-400);
+  cursor: pointer;
+}
+
+.application-icon {
+  padding-top: 3px;
+  color: var(--dsc-color-secondary-70);
+  font-size: var(--dsc-font-size-larger) !important;
+  width: auto !important;
+  height: auto !important;
+  padding-right: var(--dsc-spacing-nano) !important;
+}
+
+.application-title {
+  vertical-align: top;
+}
+
+.application-subtitle {
+  color: var(--dsc-color-content-neutral-3);
+  font: var(--dsc-typography-text-standard-600);
+}
+
+.mat-expansion-panel {
+  border-bottom: none !important;
+}
+
+.mat-mdc-tab-body {
+  padding-top: 10px !important;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.mat-mdc-cell,
+.mat-mdc-table tbody {
+  border-color: var(--mat-table-row-item-outline-color, rgba(0, 0, 0, 0.12));
+  border-width: var(--mat-table-row-item-outline-width, 1px);
+  border-style: solid;
+  letter-spacing: var(--mat-table-row-item-label-text-tracking);
+  line-height: inherit;
+  margin-right: 380px;
+  min-width: 55%;
+}
+
+.input-center input {
+  text-align: center !important;
+}
+
+.coluna-expandida-erro {
+  height: 8rem;
+}
+
+.cell-border {
+  border-color: var(--mat-table-row-item-outline-color, rgba(0, 0, 0, 0.12));
+  border-width: var(--mat-table-row-item-outline-width, 1px);
+  border-style: solid;
+  letter-spacing: var(--mat-table-row-item-label-text-tracking);
+  line-height: inherit;
+}
+
+.cell-bottom-border {
+  border-bottom-color: var(--mat-table-row-item-outline-color,
+      rgba(0, 0, 0, 0.12));
+  border-bottom-width: var(--mat-table-row-item-outline-width, 1px);
+  border-bottom-style: solid;
+  letter-spacing: var(--mat-table-row-item-label-text-tracking);
+  line-height: inherit;
+}
+
+.padding-5 {
+  padding: 5px !important;
+}
+
+.unidadeConvenios mat-label {
+  font: var(--dsc-typography-text-small-600) !important;
+  color: var(--bs-body-color) !important;
+}
+
+.justificativa-textarea textarea {
+  min-height: inherit !important;
+}
+
+.icon-button .mdc-button__label {
+  display: none;
+}
+
+.no-input-hint .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.tarifaCondicao-checkbox label {
+  font: var(--dsc-typography-text-small-400) !important;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.mat-column-tarifaMelhor mat-icon {
+  color: var(--color-bg-warning-6-attention-70);
+}
+
+dsc-select.noLabel mat-label {
+  display: none !important;
+}
+
+dsc-datepicker.noLabel div.mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+dsc-datepicker.noSize .mat-mdc-form-field--small .mdc-text-field .mat-mdc-form-field-infix .mat-mdc-input-element {
+  display: block !important;
+}
+
+.mat-mdc-paginator-page-size-label {
+  display: none;
+}
+
+.mat-column-statussituacao>.mat-sort-header-container,
+.mat-column-tiposituacao>.mat-sort-header-container,
+.mat-column-dataInclusao>.mat-sort-header-container,
+.mat-column-unidade>.mat-sort-header-container {
+  justify-content: center !important;
+}
+
+.start-25 {
+  left: 25% !important;
+}
+
+.start-75 {
+  left: 75% !important;
+}
+
+.cdk-column-tarifaCondicao.mat-mdc-header-cell,
+.cdk-column-tarifaDegustacao.mat-mdc-header-cell,
+.cdk-column-tarifaPgCaixa.mat-mdc-header-cell,
+.cdk-column-tarifaRetentativa.mat-mdc-header-cell,
+.cdk-column-tarifaSituacao.mat-mdc-header-cell,
+.cdk-column-preferencias.mat-mdc-header-cell {
+  // background-color: var(--dsc-color-grayscale-10)!important;
+  background-color: #e5f1fc !important;
+}
+
+.parameter-dias-input .mat-mdc-form-field {
+  max-width: 70px;
+}
+
+.parameter-tarifas-input .mat-mdc-form-field {
+  max-width: 100px;
+}
+
+.botoes-acao-parametros-gerais {
+  display: flex;
+  align-items: center;
+}
+
+.parameter-add-button button {
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.parameter-save-button button {
+  min-width: 45px;
+  max-width: 45px;
+  // width: 10px;
+}
+
+.parameter-produto-input {
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.parameter-save-button .mdc-button__label {
+  display: none;
+}
+
+#insertImage-textoAberturaSimulacao,
+#insertVideo-textoAberturaSimulacao,
+#angularInput {
+  display: none;
+}
+
+.combo-editor {
+  width: 170px !important;
+  font-size: 14px !important;
+  vertical-align: bottom !important;
+}
+
+.spinner mat-icon {
+  animation: rotation 2s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.itemDelete button {
+  min-width: 10px !important;
+  padding: 0px !important;
+  padding-left: 6px !important;
+}
+
+.itemInsert button {
+  min-height: 100px;
+  max-width: 200px;
+}
+
+.itemInsert mat-icon {
+  width: 50px !important;
+}
+
+.botao-filtro>button {
+  --mat-icon-color: var(--mat-table-row-item-label-text-color) !important;
+  border: none !important;
+  background-color: inherit !important;
+}
+
+.agenda-autoriz-filtro {
+  .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+    padding-left: var(--dsc-spacing-nano) !important;
+
+    .mat-mdc-form-field-flex {
+      height: 32px;
+    }
+
+    .mat-mdc-form-field-infix {
+      padding: 0px 0px;
+    }
+
+    input {
+      padding-left: 0px !important;
+
+      &.mat-mdc-form-field-input-control {
+        height: 32px !important;
+      }
+    }
+  }
+}
+
+.modal-header-close {
+  cursor: pointer;
+}
+
+.hide {
+  display: none;
+}
