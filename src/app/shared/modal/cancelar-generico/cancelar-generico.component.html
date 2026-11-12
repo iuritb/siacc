@@ -1,0 +1,83 @@
+<div class="modal-header" data-qa="cancelar-generico-header">
+  <div class="titulo-modal" data-qa="cancelar-generico-titulo">{{parametros.titulo}}</div>
+  <div class="modal-header-close" data-qa="cancelar-generico-close-wrapper">
+    <mat-icon class="material-icons" title="Fechar" (click)="activeModal.close()"
+      data-qa="cancelar-generico-btn-fechar-header">close</mat-icon>
+  </div>
+</div>
+<div class="modal-body mt-1 centralize" data-qa="cancelar-generico-body">
+  <div class="modal-subtitle mb-3" data-qa="cancelar-generico-subtitulo">{{parametros.subtitulo}}</div>
+  <form [formGroup]="formGroup" class="d-grid gap-2" data-qa="cancelar-generico-form">
+    <div>
+      <div class="label-justificativa pb-1" data-qa="cancelar-generico-label-justificativa">
+        Justificativa<span class="required">*</span>
+      </div>
+      <!-- Adicionado data-qa ao textarea de justificativa -->
+      <dsc-textarea data-qa="cancelar-generico-textarea-justificativa" formControlName="justificativaCancelamento"
+        maxlength="425" size="small" placeholder="Justifique o cancelamento" showCharCounter="425">
+      </dsc-textarea>
+    </div>
+  </form>
+</div>
+<div class="modal-footer" data-qa="cancelar-generico-footer">
+  <div class="row justify-content-end" data-qa="cancelar-generico-acoes">
+    <div class="col-auto" data-qa="cancelar-generico-acao-voltar-wrapper">
+      <dsc-button data-qa="cancelar-generico-btn-voltar" size="small" label="Voltar" variant="secondary-outlined"
+        iconPrefix="close" (click)="activeModal.close()"></dsc-button>
+    </div>
+    <div class="col-auto" data-qa="cancelar-generico-acao-confirmar-wrapper">
+      <div *ngIf="!btnIsCancelando; else spinnerCancelando">
+        <dsc-button data-qa="cancelar-generico-btn-confirmar" size="small" label="Confirmar" variant="primary"
+          iconPrefix="check" [disabled]="!formGroup.valid" (click)="processarCancelamento()"></dsc-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #spinnerCancelando>
+  <div class="pe-2" data-qa="cancelar-generico-spinner-wrapper">
+    <dsc-progress-spinner data-qa="cancelar-generico-spinner" [size]="25" [indeterminate]="true"
+      label="Cancelando"></dsc-progress-spinner>
+  </div>
+</ng-template>
+
+<!--modal PARA CONFIRMAR exclusão convenio-->
+<ng-template #modalConfirmarExcluirConvenio let-modal>
+  <div class="modal-header" data-qa="cancelar-generico-excluir-header">
+    <div class="titulo-modal" data-qa="cancelar-generico-excluir-titulo">Excluir Convênio</div>
+    <div class="modal-header-close" data-qa="cancelar-generico-excluir-close-wrapper">
+      <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()"
+        data-qa="cancelar-generico-excluir-btn-fechar-header">close</mat-icon>
+    </div>
+  </div>
+  <div class="modal-body m-2 centralize" data-qa="cancelar-generico-excluir-body">
+    <div class="row mb-2">
+      <div class="parameter-label modal-confirmar-excluir-convenio" data-qa="cancelar-generico-excluir-aviso-container">
+        <mat-icon class="material-icons-outlined" style="color: #b22222; font-size: 25px"
+          data-qa="cancelar-generico-excluir-icon-erro">error</mat-icon>
+        <span class="texto-modal-confirma-exclusao-convenio" data-qa="cancelar-generico-excluir-texto-informativo">
+          Caso o convênio seja excluído, todos os pagadores vinculados a esse
+          convênio serão informados automaticamente sobre a alteração de
+          validade do consentimento e sobre a impossibilidade de que ocorra o
+          pix automático após 30 dias.
+          <br />
+          <br />
+
+          Confirma a exclusão do convênio?
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer" data-qa="cancelar-generico-excluir-footer">
+    <div class="w-fc row" data-qa="cancelar-generico-excluir-acoes">
+      <div class="col-auto" data-qa="cancelar-generico-excluir-acao-cancelar-wrapper">
+        <dsc-button data-qa="cancelar-generico-excluir-btn-cancelar" ngbAutofocus size="small" label="Cancelar"
+          variant="secondary-outlined" iconPrefix="close" (click)="modal.close()"></dsc-button>
+      </div>
+      <div class="col-auto" data-qa="cancelar-generico-excluir-acao-confirmar-wrapper">
+        <dsc-button data-qa="cancelar-generico-excluir-btn-confirmar" size="small" label="Confirmar" variant="primary"
+          iconPrefix="send" (click)="cancelar()"></dsc-button>
+      </div>
+    </div>
+  </div>
+</ng-template>
