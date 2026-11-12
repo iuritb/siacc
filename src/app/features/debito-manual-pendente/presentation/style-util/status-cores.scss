@@ -1,0 +1,16 @@
+// Classes de status (reutilizadas do card)
+.status-cinza {
+  background-color: var(--dsc-color-bg-neutral-4);
+}
+
+.status-verde {
+  background-color: var(--dsc-color-bg-success-2);
+}
+
+.status-amarelo {
+  background-color: var(--dsc-color-bg-warning-2);
+}
+
+.status-vermelho {
+  background-color: var(--dsc-color-bg-danger-3);
+}
