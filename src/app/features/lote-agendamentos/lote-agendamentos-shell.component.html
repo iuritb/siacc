@@ -1,0 +1,17 @@
+<ng-container>
+  <app-tabela-lote [parametrosOriginais]="parametrosOriginais" [retornoAPI]="retornoAPI" [hidden]="!exibirListaLotes()"
+    (onVoltarFiltro)="voltarParaFiltro()" (onSelecionarLote)="selecionarLote($event)">
+  </app-tabela-lote>
+</ng-container>
+
+<ng-container *ngIf="exibirDetalheLote() && loteSelecionado() as lote">
+  <app-detalhamento-lote [idLote]="lote.idLote" [convenio]="lote.convenio" (onVoltarTabela)="voltarParaListaLotes()"
+    (onDetalharAgendamento)="detalharAgendamento($event)">
+  </app-detalhamento-lote>
+</ng-container>
+
+<ng-container *ngIf="exibirDetalheAgendamento() && agendamentoSelecionado() as agendamento">
+  <app-detalhamento-agendamento-lote [cobSelecionada]="agendamento.cobSelecionada"
+    [deveConsultarApi]="agendamento.deveConsultarApi" (onVoltarTabela)="voltarParaDetalheLote()">
+  </app-detalhamento-agendamento-lote>
+</ng-container>
