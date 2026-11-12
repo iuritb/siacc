@@ -1,0 +1,42 @@
+.titulo-card {
+  font-family: var(--dsc-font-family-1) !important;
+  font-size: var(--dsc-font-size-quark) !important;
+  font-weight: var(--dsc-font-weight-600) !important;
+  padding-bottom: 8px;
+}
+
+.caption-12-400 {
+  font: var(--dsc-typography-caption-standard-400);
+  color: var(--dsc-color-content-neutral-4);
+}
+
+.text-large-400 {
+  font: var(--dsc-typography-text-large-400);
+}
+
+.text-large-600 {
+  font: var(--dsc-typography-text-large-600);
+}
+
+.status-erro {
+  color: var(--dsc-color-negative-70);
+}
+
+.status-sucesso {
+  color: var(--dsc-color-positive-50)
+}
+
+.status-pendente {
+  color: var(--dsc-color-ceu-70);
+}
+
+.celula-copiavel {
+  .icone-copiar {
+    display: inline-flex;
+    font-size: 1.25rem;
+    line-height: 1;
+    vertical-align: middle;
+    color: black;
+    cursor: pointer;
+  }
+}
