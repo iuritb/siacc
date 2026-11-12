@@ -1,0 +1,1953 @@
+<ng-container *ngIf="simuladorId == null">
+  <div class="mfe-identity">
+    <span class="mfe-versao">{{nomeAlcadaAtual? nomeAlcadaAtual + " - " : ''}}</span>
+    <span class="mfe-versao">v.{{mfeVersao}}</span>
+    <span *ngIf="preferences && preferences.favoritos">
+      <a class="favorite-icon" (click)="favoriteEvent()">
+        <mat-icon class="material-icons-outlined"
+          dscTooltip="Clique para {{favorite? 'remover dos' : 'adicionar aos'}} favoritos" dscTooltipVariant="highlight"
+          dscTooltipPosition="left">{{favorite? 'favorite' : 'favorite_border'}}</mat-icon>
+      </a>
+    </span>
+  </div>
+</ng-container>
+<div [ngClass]="simuladorId == null?'content':''">
+
+  <ng-container *ngIf="simuladorId == null">
+    <ng-container *ngIf="pesquisar == true">
+      <span class="application-subtitle">{{serviceTitle}}</span>
+      <h2 class="dsc-tx-azu-st btx-tx-md-fw7-120 rfe-sz-29 dsc-m-b-24">
+        <mat-icon class="material-icons application-icon">{{icon}}</mat-icon>
+        <span class="application-title">{{title}}</span>
+      </h2>
+    </ng-container>
+
+    <ng-container *ngIf="incluir == true">
+      <h2 class="dsc-tx-azu-st btx-tx-md-fw7-120 rfe-sz-29 dsc-m-b-24">
+        <mat-icon class="material-icons application-icon">pix</mat-icon>
+        <span class="application-title">Incluir Simulação</span>
+      </h2>
+    </ng-container>
+
+    <ng-container *ngIf="alterar == true">
+      <h2 class="dsc-tx-azu-st btx-tx-md-fw7-120 rfe-sz-29 dsc-m-b-24">
+        <mat-icon class="material-icons application-icon">pix</mat-icon>
+        <span class="application-title">Alterar Simulação</span>
+      </h2>
+    </ng-container>
+
+    <ng-container *ngIf="detalhar == true">
+      <h2 class="dsc-tx-azu-st btx-tx-md-fw7-120 rfe-sz-29 dsc-m-b-24">
+        <mat-icon class="material-icons application-icon">pix</mat-icon>
+        <span class="application-title">Consultar Simulação</span>
+      </h2>
+    </ng-container>
+
+  </ng-container>
+
+  <ng-container *ngIf="simulacao == null && pesquisar == true && simuladorId == null">
+    <div class="row row-cols-lg-auto align-items-center mb-md-2 mb-lg-0">
+      <div class="col-6">
+        <dsc-input label="Nº da Simulação ou CNPJ" name="entrada" [(ngModel)]="termoCampoConsulta"
+          placeholder="Preenchimento" showClearButton="false" [disabled]="!ready"></dsc-input>
+      </div>
+      <div class="col-auto">
+        <dsc-button label="Consultar" variant="secondary" iconPrefix='search' class="me-2" (click)="consultar()"
+          [disabled]="!ready"></dsc-button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="cliente">
+    <app-card-icones-restricao *ngIf="cliente" [cliente]="{cnpj: cliente.cnpj}" [origem]="EnumOrigemConsulta.SIMULADOR">
+    </app-card-icones-restricao>
+  </ng-container>
+
+  <div *ngIf="detalhar == true">
+    <div class="row2 mb-4">
+      <br *ngIf="simuladorId == null" />
+      <section class="card p-3 shadow-sm fc mb-5">
+        <div class="row mb-1 cliente-label">
+          <div class="col-lg-6">
+            <label>Simulação: </label><span style="margin-left: 2px;">{{ numeroSimulacaoOriginal ?
+              numeroSimulacaoOriginal : numeroSimulacao }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <div class="col-lg-6">
+            <label style="margin-bottom: 5px;">Situação: </label>
+            <strong style="margin-left: 2px;"> {{ descSituacao }} </strong>
+          </div>
+        </div>
+        <br />
+        <div class="row mb-6">
+          <div class="col-lg-3">
+            <label style="margin-bottom: 5px;">Data da inclusão</label>
+
+            <div style="margin-left: 5px;">
+              <strong> {{ datainclusaoSimulacao }} </strong>
+            </div>
+
+          </div>
+
+          <div class="col-lg-3">
+            <label style="margin-bottom: 5px;">Responsável</label>
+
+            <div style="margin-left: 5px;"><strong>
+                {{responsavel}} </strong>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-lg-3">
+            <label style="margin-bottom: 5px;">Grupo Margem de Contribuição</label>
+            <div style="margin-left: 5px;">
+              <strong> {{ labelGrupoMargemContribuicaoDoDetalhamento }} </strong>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div *ngIf="mostrarTable == true" class="row mb-1">
+          <div class="col-lg-6">
+            <label style="margin-bottom: 5px;">Condições Solicitadas</label>
+          </div>
+        </div>
+        <ng-container *ngIf="mostrarTable == true">
+          <div class="row mb-1">
+            <div class="col-lg-6">
+              <table mat-table [dataSource]="dataSourceSimulacao" aria-describedby="Detalhamento da simulacao">
+
+                <ng-container matColumnDef="tarifaPgCaixa">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="2" class="titleTable">
+                    <div>Tarifa de convênio
+                      <mat-icon class="material-icons icon-info" title="Info da Tarifa de convênio">info</mat-icon>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 center-text padding-5">Pagadores conta CAIXA</div>
+                      <div class="col-6 center-text padding-5">Pagadores Outros Bancos</div>
+                    </div>
+
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <ng-container>
+                      <div class="input-container">
+                        <strong> {{proposta.pagadorCaixa != null ? "R$ " + formatCurrency(proposta.pagadorCaixa) : "Balcão"}} </strong>
+                      </div>
+                    </ng-container>
+                    <ng-container></ng-container>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tarifaPgOutros">
+                  <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}" class="titleTable"></th>
+                  <td mat-cell *matCellDef="let element">
+                    <ng-container>
+                      <div class="input-container">
+                        <strong>{{proposta.outrosBancos != null ? "R$ " + formatCurrency(proposta.outrosBancos) : "Balcão"}}</strong>
+                      </div>
+                    </ng-container>
+                    <ng-container></ng-container>
+                  </td>
+
+                </ng-container>
+
+                <ng-container matColumnDef="tarifaRetentativa" class="titleTable">
+                  <th mat-header-cell *matHeaderCellDef class="titleTable">Tarifa Retentativa
+                    <mat-icon class="material-icons icon-info" title="Info da Tarifa Retentativa">info</mat-icon>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <ng-container>
+                      <div class="input-container">
+                        <strong> {{proposta.retentativa != null ? "R$ " + formatCurrency(proposta.retentativa) : "Balcão"}}</strong>
+                      </div>
+                    </ng-container>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tarifaDegustacao" class="titleTable">
+                  <th mat-header-cell *matHeaderCellDef class="titleTable">Degustação
+                    <mat-icon class="material-icons icon-info" title="Info da Degustação">info</mat-icon>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <ng-container><strong>{{proposta.degustacao != null? proposta.degustacao + (proposta.degustacao ==
+                        1?' Dia':' Dias') : "Balcão"}}</strong></ng-container>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </ng-container>
+
+        <br />
+
+        <div>
+          <div class="row mb-1">
+            <div class="col-lg-6">
+              <label><strong>Parâmetros Contratuais solicitados</strong></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <div class="col-lg-6">
+            <ul>
+              <li *ngIf="proposta.contadebito">{{ processConta(proposta.contadebito) }}</li>
+              <li *ngIf="proposta.inibirRetentativa">{{ processInibir(proposta.inibirRetentativa) }} </li>
+              <li *ngIf="proposta.inibirOpenFinance">{{ processOpen(proposta.inibirOpenFinance) }} </li>
+              <li *ngIf="proposta.minutaContratualSimulacao">{{ procesMinuta(proposta.minutaContratualSimulacao) }}
+              </li>
+              <li *ngIf="proposta.minutaEditalSimulacao">{{ procesMinuta(proposta.minutaEditalSimulacao) }} </li>
+              <li *ngIf="proposta.outrosSimulacao">{{ procesOutros(proposta.outrosSimulacao) }}</li> {{
+              proposta.outrosSimulacaoDescricao? proposta.outrosSimulacaoDescricao : '' }}
+            </ul>
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <div class="col-lg-6">
+            <label><strong>Estimativas PIX</strong></label>
+          </div>
+        </div>
+        <div class="row mb-4">
+
+          <div class="col-lg-3">
+            <label style="margin-bottom: 5px;">Agendamento mês</label>
+            <div><strong>{{ agendamentoMes }} </strong></div>
+          </div>
+
+          <div class="col-lg-3">
+            <label style="margin-bottom: 5px;">Ticket Médio</label>
+            <div><strong> R$ {{formatCurrency(vticketMedio)}} </strong></div>
+          </div>
+        </div>
+
+        <div class="row mb-8">
+
+          <div class="col-lg-6">
+            <label style="margin-bottom: 5px;">Justificativa </label>
+            <div><strong> {{ this.justificativaInclusao? this.justificativaInclusao : 'NÃO INFORMADO' }}</strong></div>
+          </div>
+
+          <div class="col-lg-3">
+            <label style="margin-bottom: 5px;">Documentação</label>
+            <div class="cliente-label">
+              <ng-container *ngFor="let documento of documentos">
+                <a href="#" (click)="downloadFile($event, documento)">{{documento.nomeDocumento}}</a>
+                <br>
+              </ng-container>
+              <ng-container *ngIf="documentos == null || documentos.length == 0">
+                sem documentação
+              </ng-container>
+              <!-- deixado propositalmente em branco para evidenciar que ainda nao esta pronto -->
+            </div>
+          </div>
+        </div>
+
+
+      </section>
+
+      <ng-container *ngIf="detalhar == true">
+        <ng-container *ngFor="let parecer of pareceres; let i = index">
+          <ng-container
+            *ngIf="parecer && parecer.tipoSituacao && parecer.tipoSituacao.id != 1 && parecer.tipoSituacao.id != 10 && parecer.tipoSituacao.id != 17 && parecer.alcada.nivel != nivelAlcadaCliente">
+            <div class="shadow-sm">
+              <section class="card cardheader fc">
+                <div class="row mb-1">
+                  <div class="col-lg-12">
+                    <label class="cliente-label labelHeader">
+                      Parecer da {{parecer.alcada.nomeAlcada}}
+                      <span class="icon-header" [ngClass]="processaColorParecer(parecer)">
+                        <mat-icon class="material-icons icon-header-text">{{processaIconeParecer(parecer)}}</mat-icon>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+              </section>
+              <section class="card p-3 cardbody fc" [ngClass]="simuladorId == null? 'mb-5':''">
+                <div class="row mb-4">
+                  <div class="col-md-3">
+                    <label class="mb-2">Unidade</label>
+                    <div>
+                      <strong>{{padNumber(parecer.unidadeAlcada, 4)}} - Nome da Unidade</strong>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-2">Data da Análise</label>
+                    <div>
+                      <strong>{{formatDate(getDate(parecer.tsAlcada))}}</strong>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-2">Responsável</label>
+                    <div>
+                      <strong>{{parecer.coUsuarioAlcada ? (parecer.coUsuarioAlcada) : "sem responsável"}}</strong>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-2">Parecer</label>
+                    <div>
+                      <strong>{{parecer.tipoSituacao.nomeSituacao}}</strong>
+                    </div>
+                  </div>
+
+                </div>
+
+                <ng-container *ngIf="parecer && parecer.tipoSituacao && parecer.tipoSituacao.id == 5">
+
+                  <div class="row mb-1">
+                    <div class="col-lg-6">
+                      <label class="exception-title">Condições da contraproposta</label>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col-lg-6">
+                      <table mat-table [dataSource]="dataSourceSimulacao" aria-describedby="Detalhamento da simulacao">
+
+                        <ng-container matColumnDef="tarifaPgCaixa">
+                          <th mat-header-cell *matHeaderCellDef [attr.colspan]="2" class="titleTable">
+                            <div>Tarifa de convênio
+                              <mat-icon class="material-icons icon-info"
+                                title="Info da Tarifa de convênio">info</mat-icon>
+                            </div>
+                            <div class="row">
+                              <div class="col-6 center-text padding-5">Pagadores conta CAIXA</div>
+                              <div class="col-6 center-text padding-5">Pagadores Outros Bancos</div>
+                            </div>
+
+                          </th>
+                          <td mat-cell *matCellDef="let element">
+                            <ng-container>
+                              <div class="input-container"><strong>R$ {{formatCurrency(novaproposta.pagadorCaixa)}}
+                                </strong></div>
+                            </ng-container>
+                            <ng-container></ng-container>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tarifaPgOutros">
+                          <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}" class="titleTable"></th>
+                          <td mat-cell *matCellDef="let element">
+                            <ng-container>
+                              <div class="input-container"><strong>R$
+                                  {{formatCurrency(novaproposta.outrosBancos)}}</strong></div>
+                            </ng-container>
+                            <ng-container></ng-container>
+                          </td>
+
+                        </ng-container>
+
+                        <ng-container matColumnDef="tarifaRetentativa" class="titleTable">
+                          <th mat-header-cell *matHeaderCellDef class="titleTable">Tarifa Retentativa
+                            <mat-icon class="material-icons icon-info"
+                              title="Info da Tarifa Retentativa">info</mat-icon>
+                          </th>
+                          <td mat-cell *matCellDef="let element">
+                            <ng-container>
+                              <div class="input-container">
+                                <strong> R$ {{formatCurrency(novaproposta.retentativa)}}</strong>
+                              </div>
+                            </ng-container>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tarifaDegustacao" class="titleTable">
+                          <th mat-header-cell *matHeaderCellDef class="titleTable">Degustação
+                            <mat-icon class="material-icons icon-info" title="Info da Degustação">info</mat-icon>
+                          </th>
+                          <td mat-cell *matCellDef="let element">
+                            <ng-container><strong>{{novaproposta.degustacao != null ? novaproposta.degustacao :
+                                0}}{{novaproposta.degustacao == 1?' Dia':' Dias'}}</strong></ng-container>
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+
+
+                  <div class="row mb-1">
+                    <div class="col-lg-6">
+                      <label class="exception-title">Parâmetros Contratuais</label>
+                    </div>
+                  </div>
+
+                  <div class="row mb-1">
+                    <div class="col-lg-6">
+                      <ul>
+                        <li *ngIf="novaproposta.contadebito">{{ processConta(novaproposta.contadebito) }}</li>
+                        <li *ngIf="novaproposta.inibirRetentativa">{{ processInibir(novaproposta.inibirRetentativa) }}
+                        </li>
+                        <li *ngIf="novaproposta.inibirOpenFinance">{{ processOpen(novaproposta.inibirOpenFinance) }}
+                        </li>
+                        <li *ngIf="novaproposta.minutaContratualSimulacao">{{
+                          procesMinuta(novaproposta.minutaContratualSimulacao) }} </li>
+                        <li *ngIf="novaproposta.minutaEditalSimulacao">{{
+                          procesMinuta(novaproposta.minutaEditalSimulacao) }} </li>
+                        <li *ngIf="novaproposta.outrosSimulacao">{{ procesOutros(novaproposta.outrosSimulacao) }}</li>
+                        {{ novaproposta.outrosSimulacaoDescricao? novaproposta.outrosSimulacaoDescricao : '' }}
+                      </ul>
+                    </div>
+                  </div>
+
+                </ng-container>
+
+                <div
+                  *ngIf="parecer?.tipoSituacao?.id && parecer.tipoSituacao.id != 2 && parecer.tipoSituacao.id != 10 && parecer.tipoSituacao.id != 17"
+                  class="row mb-4">
+                  <div class="col-md-6">
+                    <label class="mb-2">Justificativa</label>
+                    <div>
+                      <strong>{{parecer?.parecer && parecer.parecer != "null" ? parecer.parecer : 'NÃOINFORMADO'}}</strong>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="mb-2">Documentação</label>
+                    <div class="cliente-label">
+                      <ng-container *ngFor="let documento of parecer.documentos">
+                        <a href="#" (click)="downloadFile($event, documento)">{{documento.nomeDocumento}}</a>
+                        <br>
+                      </ng-container>
+                      <ng-container *ngIf="parecer.documentos == null || parecer.documentos.length == 0">
+                        sem documentação
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-container
+                  *ngIf="parecer && parecer.tipoSituacao && parecer.tipoSituacao.id == 5 && lastParecer != null && lastParecer.alcada.id == 5 && lastParecer.tipoSituacao.id != 2">
+                  <div class="row pb-4 pt-2">
+                    <div class="col-lg-6">
+                      <label class="card-title">Avaliação da contraproposta</label>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col-md-3">
+                      <label class="mb-2">Unidade</label>
+                      <div>
+                        <strong>{{padNumber(lastParecer.unidadeAlcada,4)}} - Nome da Unidade</strong>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <label class="mb-2">Data da Análise</label>
+                      <div>
+                        <strong>{{formatDate(getDate(lastParecer.tsAlcada))}}</strong>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <label class="mb-2">Responsável</label>
+                      <div>
+                        <strong>{{lastParecer.coUsuarioAlcada ? (lastParecer.coUsuarioAlcada + " - Nome do responsável")
+                          : "sem responsável"}}</strong>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <label class="mb-2">Análise</label>
+                      <div>
+                        <strong>{{lastParecer.tipoSituacao.nomeSituacao}}</strong>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col-md-6">
+                      <label class="mb-2">Justificativa</label>
+                      <div>
+                        <strong>{{lastParecer.parecer != null && lastParecer.parecer != "null"?lastParecer.parecer:'NÃO INFORMADO'}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container
+                  *ngIf="parecer && parecer.tipoSituacao && parecer.tipoSituacao.id == 5 && lastParecer != null && lastParecer.alcada.id == 5 && lastParecer.tipoSituacao.id == 2 && simulacaoAnalisavel">
+
+                  <div class="row d-flex justify-content-end pt-4">
+                    <div class="col-auto">
+                      <dsc-button label="Recusar" iconPrefix='thumb_down' variant="secondary"
+                        (click)="recusarContraProposta(modalContrapropostaRecusada)"></dsc-button>
+                    </div>
+                    <div class="col-auto">
+                      <dsc-button label="Aceitar" iconPrefix="thumb_up" variant="primary"
+                        (click)="aceitarContraProposta(modalContrapropostaAprovada)"></dsc-button>
+                    </div>
+                  </div>
+                </ng-container>
+
+              </section>
+            </div>
+          </ng-container>
+
+
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="(detalhar == true && avaliar == true)">
+        <section class="card cardheader fc">
+          <div class="row mb-1">
+            <div class="col-lg-12">
+              <label class="cliente-label labelHeader">
+                Avaliar Simulação
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="card p-3 cardbody fc mb-5">
+          <div class="row mb-3">
+            <dsc-radio-button label="Aprovar" name="avaliacao" variant="highlight" value="APROVADA"
+              [ngModel]="avaliacao" size="small" class="row" (click)="avaliacao='APROVADA'">
+            </dsc-radio-button>
+            <dsc-radio-button label="Reprovar" name="avaliacao" variant="highlight" value="REPROVADA"
+              [ngModel]="avaliacao" size="small" class="row" (click)="avaliacao='REPROVADA'">
+            </dsc-radio-button>
+            <div class="display-inline" *ngIf="alcadaAtual == nivelAlcadaMatriz">
+              <dsc-radio-button label="Emitir contraproposta" name="avaliacao" variant="highlight"
+                value="CONTRAPROPOSTA" [ngModel]="avaliacao" size="small" class="row"
+                (click)="avaliacao='CONTRAPROPOSTA'">
+              </dsc-radio-button>
+              <mat-icon class="material-icons-outlined icon-info"
+                title="Propor novos valores de tarifa e/ou parâmetros contratuais">info</mat-icon>
+            </div>
+
+          </div>
+
+
+          <div class="row" *ngIf="avaliacao == 'APROVADA' || avaliacao == 'REPROVADA'">
+            <div class="col-12 col-lg-6">
+              <div class="row  mb-2 ps-2 pe-2">
+                <div class="col-12 justificativa-input">
+                  Justificativa
+                  <dsc-textarea label="" name="avaliacaoJustificativa" placeholder="Preenchimento"
+                    [(ngModel)]="avaliacaoJustificativa" size="small" class="justificativa-textarea" maxlength="425"
+                    showCharCounter="425"></dsc-textarea>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-12 col-lg-6">
+              <div class="row  mb-2 ps-2 pe-2">
+                <div class="col-10 documentacao-input">
+                  <dsc-input-file label="Documentação" name="avaliacaoDocumento" placeholder="Documento"
+                    [(ngModel)]="avaliacaoDocumento" size="small" labelHint="Opcional" multiple="true"
+                    accept=".pdf,.txt,.jpg,.jpeg" maxTotalSize="12000000"></dsc-input-file>
+                </div>
+                <div *ngIf="avaliacaoDocumento" class="col-1 pt-4 mt-1">
+                  <dsc-button iconButton="true" icon='clear' variant="secondary-outlined" size="small"
+                    (click)="avaliacaoDocumento = null" title="Remover arquivo"></dsc-button>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row d-flex justify-content-end">
+            <div class="col-auto">
+              <dsc-button label="Voltar" iconPrefix='arrow_back_ios' variant="secondary"
+                (click)="retornarAvaliarSimulacao()"></dsc-button>
+            </div>
+            <div class="col-auto">
+              <dsc-button label="Enviar" iconPrefix="send" variant="primary"
+                (click)="enviarAvaliacao(modalConfirmContraProposta, modalConfirmAprovacao, modalConfirmReprovacao)"></dsc-button>
+            </div>
+          </div>
+
+
+        </section>
+
+      </ng-container>
+
+      <ng-container class="shadow-sm" *ngIf="(detalhar == true && contraproposta)">
+        <section class="card cardheader fc">
+          <div class="row mb-1">
+            <div class="col-lg-12">
+              <label class="cliente-label labelHeader">
+                Contraproposta
+              </label>
+            </div>
+          </div>
+        </section>
+        <section class="card p-3 cardbody fc mb-5">
+          <div class="row mb-3">
+            <div class="flex-grow-1">
+              <span class="exception-title ms-2">Tarifas</span>
+            </div>
+            <div class="card-rule ms-2"></div>
+            <section class="noshadow fc mt-2 mb-2">
+              <div class="col-lg-6">
+                <table mat-table [dataSource]="tarifaContraProposta" aria-describedby="tarifas">
+
+                  <ng-container matColumnDef="tarifaPgCaixa">
+                    <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">
+                      <div class="tarifa-agendamento-header cell-bottom-border">Tarifa de convênio
+                        <mat-icon class="material-icons icon-info" title="Info da Tarifa de convênio">info</mat-icon>
+                      </div>
+                      <div class="row">
+                        <div class="col-6 center-text padding-5">Pagadores conta CAIXA</div>
+                        <div class="col-6 center-text padding-5">Pagadores Outros Bancos</div>
+                      </div>
+
+                    </th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <div class="input-container"><dsc-input-currency name="pgCaixa" [(ngModel)]="tarifa.pgCaixa"
+                          placeholder="R$ 0.00" size="small" class="input-center"></dsc-input-currency></div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tarifaPgOutros">
+                    <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}"></th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <div class="input-container"><dsc-input-currency name="pgOutros" [(ngModel)]="tarifa.pgOutros"
+                          placeholder="R$ 0.00" size="small" class="input-center"></dsc-input-currency></div>
+                    </td>
+
+                  </ng-container>
+
+                  <ng-container matColumnDef="tarifaRetentativa">
+                    <th mat-header-cell *matHeaderCellDef>Tarifa Retentativa
+                      <mat-icon class="material-icons icon-info" title="Info da Tarifa Retentativa">info</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <div class="input-container"><dsc-input-currency name="retentativa"
+                          [(ngModel)]="tarifa.retentativa" placeholder="R$ 0.00" size="small"
+                          class="input-center"></dsc-input-currency></div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tarifaDegustacao">
+                    <th mat-header-cell *matHeaderCellDef>Degustação
+                      <mat-icon class="material-icons icon-info" title="Info da Degustação">info</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <div class="input-container"><dsc-input name="degustacao" [(ngModel)]="tarifa.degustacao"
+                          placeholder="0 Dia" size="small" class="input-center"></dsc-input></div>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="tarifasContrapropostaColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: tarifasContrapropostaColumns;"></tr>
+                </table>
+
+              </div>
+            </section>
+          </div>
+
+          <div class="row mb-3">
+            <div class="flex-grow-1">
+              <span class="exception-title ms-2">Exceções</span>
+              <div class="card-rule ms-2"></div>
+              <section class="section2 noshadow fc mt-2 mb-2  ms-2 me-2 row">
+                <dsc-checkbox label="Conta para débito da tarifa diferente da conta de repasse" variant="highlight"
+                  size="small" [(ngModel)]="contraproposta.excecoes.debito" class="col-12 col-lg-6"></dsc-checkbox>
+                <dsc-checkbox label="Inibir retentativa" variant="highlight" size="small"
+                  [(ngModel)]="contraproposta.excecoes.inibirRetentativa" class="col-12 col-lg-6"></dsc-checkbox>
+                <dsc-checkbox label="Inibir operar via Iniciadora de Pagamento (Open Finance)" variant="highlight"
+                  size="small" [(ngModel)]="contraproposta.excecoes.inibirOpenFinance"
+                  class="col-12 col-lg-6"></dsc-checkbox>
+                <dsc-checkbox label="Minuta contratual fora do padrão" variant="highlight" size="small"
+                  [(ngModel)]="contraproposta.excecoes.minutaContratualForaPadrao"
+                  class="col-12 col-lg-6"></dsc-checkbox>
+                <dsc-checkbox label="Minuta edital de credenciamento" variant="highlight" size="small"
+                  [(ngModel)]="contraproposta.excecoes.minutaEditalCredenciamento"
+                  class="col-12 col-lg-6"></dsc-checkbox>
+
+                <dsc-checkbox label="Outro" variant="highlight" size="small" [(ngModel)]="contraproposta.excecoes.outro"
+                  class="col-12 col-lg-6"></dsc-checkbox>
+                <span class="tab-content-font accordion-item" [ngClass]="contraproposta.excecoes.outro?'show':''">
+                  <dsc-textarea variant="highlight" size="small" [(ngModel)]="contraproposta.excecoes.textoOutro"
+                    placeholder="Texto" maxlength="200"
+                    [ngClass]="contraproposta.excecoes.outro?'enabled':'disabled'"></dsc-textarea>
+                </span>
+              </section>
+            </div>
+          </div>
+          <div class="row mb-3">
+
+            <div class="col-12 col-lg-6">
+              <div class="row  mb-2 ps-2 pe-2">
+                <div class="col-12 justificativa-input">
+                  <span class="exception-title ms-2">Justificativa</span>
+                  <dsc-textarea label="" name="avaliacaoJustificativa" placeholder="Preenchimento"
+                    [(ngModel)]="avaliacaoJustificativa" size="small" class="justificativa-textarea" maxlength="425"
+                    showCharCounter="425"></dsc-textarea>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-12 col-lg-6">
+              <div class="row  mb-2 ps-2 pe-2">
+                <div class="col-12 documentacao-input">
+                  <dsc-input-file label="Documentação" name="contraproposta.documentacao" placeholder="Documento"
+                    [(ngModel)]="contraproposta.documentacao" size="small" labelHint="Opcional" multiple="true"
+                    accept=".pdf,.txt,.jpg,.jpeg" maxTotalSize="12000000"></dsc-input-file>
+                </div>
+                <div *ngIf="avaliacaoDocumento" class="col-1 pt-4 mt-1">
+                  <dsc-button iconButton="true" icon='clear' variant="secondary-outlined" size="small"
+                    (click)="contraproposta.documentacao = null" title="Remover arquivo"></dsc-button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="row d-flex justify-content-end">
+            <div class="col-auto">
+              <dsc-button label="Voltar" iconPrefix='arrow_back_ios' variant="secondary"
+                (click)="retornarAvaliarSimulacao()"></dsc-button>
+            </div>
+            <div class="col-auto">
+              <dsc-button label="Enviar" iconPrefix="send" variant="primary"
+                (click)="confirmaNovaContraProposta(modalConfirmNovaContraProposta, modalInconsistencias)"></dsc-button>
+            </div>
+          </div>
+        </section>
+
+      </ng-container>
+
+      <div *ngIf="avaliar == false && contraproposta == null &&  simuladorId == null" class="detalhamentoActionArea">
+        <div class="row row-cols-lg-auto mb-md-2 mb-lg-0 d-flex justify-content-end">
+
+          <div class="col-auto">
+            <dsc-button *ngIf="detalhar == true" label="Voltar" iconPrefix='arrow_back_ios' variant="secondary-outlined"
+              (click)="voltar()"></dsc-button>
+          </div>
+
+          <div class="col-auto">
+            <dsc-button *ngIf="detalhar == true" label="Alterar" iconPrefix='edit' variant="secondary-outlined"
+              (click)="alterarSimulacao()" disabled="!alterarEnabled"></dsc-button>
+          </div>
+
+          <div [ngClass]="verificaSituacao() === true?'botao-funcao-bloqueio': 'col-auto'">
+            <dsc-button *ngIf="detalhar == true" label="Avaliar" iconPrefix='balance' variant="secondary-outlined"
+              (click)="avaliarSimulacao()" [disabled]="!simulacaoAvaliavel"></dsc-button>
+          </div>
+
+          <div [ngClass]="verificaSituacao() === true?'botao-funcao-bloqueio': 'col-auto'">
+            <dsc-button [disabled]="!simulacaoCancelavel" label="Cancelar" iconPrefix='close'
+              variant="secondary-outlined" (click)="solicitarCancelamento()"></dsc-button>
+          </div>
+
+          <div class="col-auto">
+            <dsc-button *ngIf="detalhar == true" label="Copiar e criar nova" variant="secondary-outlined"
+              iconPrefix='file_copy' (click)="confirmaCopiarSimulacao(modalCopiarSimulacao)"></dsc-button>
+          </div>
+
+          <div class="col-auto">
+            <dsc-button *ngIf="detalhar == true" label="Apropriar no contrato" variant="secondary-outlined"
+              iconPrefix='approval' disabled></dsc-button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <span *ngIf="simulacao == null && pesquisar == true && simuladorId == null"
+    class="row mb-3">
+    <div class="col-auto">
+      <a class="dsc-tx-azu-st" (click)="showModal(modalPixAutomatico)">O que é o PIX AUTOMÁTICO?</a><br />
+    </div>
+  </span>
+
+  <section *ngIf="message && cliente === null" class="card p-3 fc mb-4">
+    <div class="d-flex">
+      <div class="flex-grow-1">
+        <label class="cliente-label">{{message.title}}</label>
+        <div *ngIf="message.description != null" class="cliente-content">
+          <span>{{message.description}}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ng-container *ngIf="(pesquisar || incluir || alterar) && cliente && message">
+
+    <section
+      *ngIf="pesquisar == true && cliente != null && cliente.cnpj != null && cliente.simulacoes != null && cliente.simulacoes.length > 0 && simulacao == null"
+      class="card p-4 fc">
+
+      <div class="wrapper mb-3">
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)" class="table-simulacoes"
+          aria-describedby="simulacoes dos clientes">
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Simulação</th>
+            <td mat-cell *matCellDef="let simulacao"> <a href="#"
+                (click)="detalharSimulacao($event,simulacao.id)">{{simulacao.simulacaoOriginal?simulacao.simulacaoOriginal.id:simulacao.id}}</a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cnpj">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>CNPJ</th>
+            <td mat-cell *matCellDef="let simulacao"> {{simulacao.cnpjFormatted}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="razaosocial">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Razão Social</th>
+            <td mat-cell *matCellDef="let simulacao"> {{simulacao.nome}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="unidade">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Unidade</th>
+            <td mat-cell *matCellDef="let simulacao"> {{simulacao.unidade}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dataInclusao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="dataInclusao">Data de Inclusão</th>
+            <td mat-cell *matCellDef="let simulacao"> {{simulacao.dataInclusaoFormatted}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="statussituacao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Situação</th>
+            <td mat-cell *matCellDef="let simulacao" title="Data: {{simulacao.datasituacao}}">{{simulacao.situacao}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="tiposituacao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Diferenciais</th>
+            <td mat-cell *matCellDef="let simulacao">{{simulacao.diferenciais}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="etapa1">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="statusEtapa1">
+              Agência
+            </th>
+            <td mat-cell *matCellDef="let simulacao" [attr.colspan]="5">
+              <div class="position-relative progress-etapas">
+                <div class="row">
+                  <div class="col-3 no-padding">
+                    <div class="progress bar">
+                      <div class="progress-bar progress-success" role="progressbar" style="width:100%"
+                        [ngClass]="getProgressParte1(simulacao)"></div>
+                    </div>
+                  </div>
+                  <div class="col-3 no-padding">
+                    <div class="progress bar">
+                      <div class="progress-bar progress-success" role="progressbar" style="width:100%"
+                        [ngClass]="getProgressParte2(simulacao)"></div>
+                    </div>
+                  </div>
+                  <div class="col-3 no-padding">
+                    <div class="progress bar">
+                      <div class="progress-bar progress-success" role="progressbar" style="width:100%"
+                        [ngClass]="getProgressParte3(simulacao)"></div>
+                    </div>
+                  </div>
+                  <div class="col-3 no-padding">
+                    <div class="progress bar">
+                      <div class="progress-bar progress-success" role="progressbar" style="width:100%"
+                        [ngClass]="getProgressParte4(simulacao)"></div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <button type="button"
+                  class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-primary rounded-pill progress-button"
+                  [ngClass]="getEtapaClass(simulacao.etapa1, simulacao)" title="{{getEtapaStatus(simulacao.etapa1)}}">
+                  <mat-icon class="material-icons progress-icon">{{getEtapaIcon(simulacao.etapa1)}}</mat-icon>
+                </button>
+                <button type="button"
+                  class="position-absolute top-0 start-25 translate-middle btn btn-sm btn-primary rounded-pill progress-button"
+                  [ngClass]="getEtapaClass(simulacao.etapa2, simulacao)" title="{{getEtapaStatus(simulacao.etapa2)}}">
+                  <mat-icon class="material-icons progress-icon">{{getEtapaIcon(simulacao.etapa2)}}</mat-icon>
+                </button>
+                <button type="button"
+                  class="position-absolute top-0 start-50 translate-middle btn btn-sm btn-primary rounded-pill  progress-button"
+                  [ngClass]="getEtapaClass(simulacao.etapa3, simulacao)" title="{{getEtapaStatus(simulacao.etapa3)}}">
+                  <mat-icon class="material-icons progress-icon">{{getEtapaIcon(simulacao.etapa3)}}</mat-icon>
+                </button>
+                <button type="button"
+                  class="position-absolute top-0 start-75 translate-middle btn btn-sm btn-secondary rounded-pill progress-button"
+                  [ngClass]="getEtapaClass(simulacao.etapa4, simulacao)" title="{{getEtapaStatus(simulacao.etapa4)}}">
+                  <mat-icon class="material-icons progress-icon">{{getEtapaIcon(simulacao.etapa4)}}</mat-icon>
+                </button>
+                <button type="button"
+                  class="position-absolute top-0 start-100 translate-middle btn btn-sm btn-secondary rounded-pill progress-button"
+                  [ngClass]="getEtapaClass(simulacao.etapa5, simulacao)" title="{{getEtapaStatus(simulacao.etapa5)}}">
+                  <mat-icon class="material-icons progress-icon">{{getEtapaIcon(simulacao.etapa5)}}</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="etapa2">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="statusEtapa2">
+              Sup. Regional
+            </th>
+            <td *matCellDef="let simulacao" [ngStyle]="{'display': 'none'}">
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="etapa3">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="statusEtapa3">
+              Acima Sup. Regional
+            </th>
+            <td *matCellDef="let simulacao" [ngStyle]="{'display': 'none'}">
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="etapa4">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="statusEtapa4">
+              Matriz
+            </th>
+            <td *matCellDef="let simulacao" [ngStyle]="{'display': 'none'}">
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="etapa5">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="statusEtapa5">
+              Cliente
+            </th>
+            <td *matCellDef="let simulacao" [ngStyle]="{'display': 'none'}">
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="comandos">
+            <th mat-header-cell *matHeaderCellDef>
+              Comandos
+            </th>
+            <td *matCellDef="let simulacao" class="mat-column-cell-comandos">
+              <div class="btn-group" role="group">
+                <button class="btn" dscTooltip="Visualizar simulação" dscTooltipVariant="highlight"
+                  (click)="detalharSimulacao($event,simulacao.id)">
+                  <mat-icon class="material-icons-outlined">visibility</mat-icon>
+                </button>
+                <button class="btn" dscTooltip="Contratar simulação" dscTooltipVariant="highlight"
+                  [dscTooltipDisabled]="getSituacao(simulacao)!='Aprovado'">
+                  <mat-icon class="material-icons-outlined"
+                    [ngClass]="getSituacao(simulacao)!='Aprovado'?'button-disabled':''">description</mat-icon>
+                </button>
+              </div>
+
+
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="colunasConsultaPadrao"></tr>
+          <tr mat-row *matRowDef="let row; columns: colunasConsultaPadrao;"></tr>
+        </table>
+        <mat-paginator #paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="preferences.pageSize"
+          showFirstLastButtons (page)="savePreferences($event)"></mat-paginator>
+
+      </div>
+      <div class="row d-flex justify-content-end">
+        <div class="col-auto">
+          <dsc-button label="Nova consulta" variant="secondary-outlined" (click)="limparConsulta()"
+            iconPrefix='restart_alt'></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Incluir Simulação" iconPrefix="add" variant="primary" (click)="incluirSimulacao()"
+            [disabled]="!clientReadyInclude()" title="Incluir nova simulação">
+          </dsc-button>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <section *ngIf="(incluir == true || alterar == true) && cliente != null && simulacao != null"
+    class="card p-3 fc mb-5">
+    <div class="d-flex wrapper">
+      <div class="">
+        <mat-icon class="material-icons-outlined simulacao-icon" title="Cadastro Atualizado">monetization_on</mat-icon>
+      </div>
+      <div class="flex-grow-1">
+        <span class="card-title ms-2">Tarifa</span>
+        <div class="card-rule ms-2"></div>
+        <div class="d-flex justify-content-between align-items-center mt-4 ms-2">
+          <div class="col-auto">
+            <dsc-select name="grupoTarifa" #grupoTarifa="ngModel" label="Selecione o Grupo da Tarifa"
+              placeholder="Escolha um grupo"
+              labelHintTooltip="Consulte o anexo IV do normativo CO512 para mais informações."
+              [options]="opcoesGrupoTarifas" size="standard" required [(ngModel)]="grupoMCSelecionadoAtual"
+              class="col-auto">
+            </dsc-select>
+          </div>
+          <div class="col-auto mensagem-grupo">
+            {{definirMensagemGrupoPertencimento()}}
+          </div>
+        </div>
+        <div class="tab-content-font accordion-item" [ngClass]="controlaAberturaDoCardTarifas?'show':''">
+          <div>
+            <dsc-radio-button class="me-3" [(ngModel)]="radioButtonTarifas" label="Simulações Realizadas"
+              [value]="SIMULACOES_REALIZADAS" name="radioButtonTarifas"
+              (ngModelChange)="onRadioTarifasChange($event)"></dsc-radio-button>
+            <dsc-radio-button [(ngModel)]="radioButtonTarifas" label="Pleitear Condições Diferenciais"
+              [value]="PLEITEAR_CONDICOES" name="radioButtonTarifas"
+              (ngModelChange)="onRadioTarifasChange($event)"></dsc-radio-button>
+          </div>
+          <div *ngIf="radioButtonTarifas == SIMULACOES_REALIZADAS; else pleitearCondicoesDiferenciadas">
+            <section class="section noshadow fc mt-3 mb-2 p-0">
+              <div class="wrapper mb-3 table-scroll" id="wrapperTabelaTarifas">
+                <table mat-table [dataSource]="processarTarifas(tarifas)" aria-describedby="tarifas">
+
+                  <ng-container matColumnDef="tarifaCondicao">
+                    <th mat-header-cell *matHeaderCellDef>Pacote</th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <dsc-radio-button name="condicao"
+                        label="{{tarifa.tipo != TipoTarifaSimulador.CAMPANHA && tarifa.tipo != TipoTarifaSimulador.SIMULACAO? tarifa.condicao : ''}}"
+                        variant="highlight" size="small" class="tarifaCondicao-checkbox"
+                        (change)="selecionarTarifa(tarifa)" value="{{tarifaIndex(tarifa)}}"
+                        [(ngModel)]="tarifaSelected">
+                      </dsc-radio-button>
+                      <a *ngIf="tarifa.tipo == TipoTarifaSimulador.CAMPANHA || tarifa.tipo == TipoTarifaSimulador.SIMULACAO"
+                        href="#" (click)="detalharSimulacao($event, tarifa.id)">{{tarifa.condicao}}</a>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tarifaPgCaixa">
+                    <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">
+                      <div class="row">
+                        <div class="col-6 center-text padding-5">Pagadores conta CAIXA</div>
+                        <div class="col-6 center-text padding-5">Pagadores Outros Bancos</div>
+                      </div>
+
+                    </th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <ng-container
+                        *ngIf="!tarifa.custom"><strong>R$ {{formatCurrency(tarifa.pgCaixa? tarifa.pgCaixa:'0,00' )}}</strong></ng-container>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tarifaPgOutros">
+                    <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}"></th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <ng-container
+                        *ngIf="!tarifa.custom"><strong>R${{formatCurrency(tarifa.pgOutros)}}</strong></ng-container>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tarifaRetentativa">
+                    <th mat-header-cell *matHeaderCellDef>Tarifa Retentativa
+                      <mat-icon class="material-icons icon-info" title="Info da Tarifa Retentativa">info</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <ng-container
+                        *ngIf="!tarifa.custom"><strong>R${{formatCurrency(tarifa.retentativa)}}</strong></ng-container>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tarifaDegustacao">
+                    <th mat-header-cell *matHeaderCellDef>Degustação
+                      <mat-icon class="material-icons icon-info" title="Info da Degustação">info</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <ng-container
+                        *ngIf="!tarifa.custom"><strong>{{tarifa.degustacao}}{{tarifa.degustacao == 1?'Dia':' Dias'}}</strong></ng-container>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tarifaSituacao">
+                    <th mat-header-cell *matHeaderCellDef>Grupo</th>
+                    <td mat-cell *matCellDef="let tarifa">
+                      <span class="">
+                        {{obterLabelGrupo(tarifa?.grupoMargemContribuicao)}}
+                      </span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="preferencias">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <dsc-button (click)="filtrarItems()" variant="auxiliary"
+                        dscTooltip="{{filtrarTarifas? 'Mostrando pacotes filtrados. Clique para exibir todos.' : 'Mostrando todos os pacotes. Clique para filtrar.'}}"
+                        dscTooltipVariant="highlight" dscTooltipPosition="left"
+                        icon="{{filtrarTarifas? 'visibility_off' : 'visibility'}}" iconButton="true"
+                        class="botao-filtro"></dsc-button>
+                    </th>
+                    <td *matCellDef="let tarifa" class="mat-column-cell-tarifas-comandos">
+                      <div
+                        *ngIf="tarifa.tipo != TipoTarifaSimulador.BALCAO && tarifa.tipo != TipoTarifaSimulador.DIFERENCIADA"
+                        role="group">
+                        <dsc-button (click)="alternarVisibilidadeTarifa(tarifa)" variant="auxiliary"
+                          dscTooltip="{{tarifa.visible? 'Clique para ocultar pacote' : 'Clique para exibir pacote'}}"
+                          dscTooltipVariant="highlight" dscTooltipPosition="left"
+                          icon="{{tarifa.visible? 'visibility' : 'visibility_off'}}" iconButton="true"
+                          class="botao-filtro"></dsc-button>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="tarifasColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: tarifasColumns;"></tr>
+                </table>
+
+              </div>
+
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex justify-content-end">
+      <div class="col-auto">
+        <button class="accordion-button" (click)="controlaAberturaDoCardTarifas = !controlaAberturaDoCardTarifas">
+          <span class="accordion-title">{{controlaAberturaDoCardTarifas?'Ver Menos':'Ver Mais'}}</span>
+          <mat-icon
+            class="material-icons">{{controlaAberturaDoCardTarifas?'arrow_drop_up':'arrow_drop_down'}}</mat-icon>
+
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="(incluir == true || alterar == true) && cliente != null && simulacao != null"
+    class="card p-3 fc mb-5">
+    <div class="d-flex wrapper">
+      <div class="">
+        <mat-icon class="material-icons-outlined simulacao-icon" title="Cadastro Atualizado">model_training</mat-icon>
+      </div>
+      <div class="flex-grow-1">
+        <span class="card-title ms-2">Exceções</span>
+        <div class="card-rule ms-2"></div>
+        <span class="mt-2">
+          <dsc-checkbox label="Excepcionalizar parâmetros contratuais" variant="highlight" size="small"
+            [(ngModel)]="excecaoSelecionada" (ngModelChange)="onExcepcionalizarExcecao()">
+          </dsc-checkbox>
+        </span>
+        <dsc-alert message="Ao excepcionalizar, a simulação deverá ser analisada exclusivamente pela Matriz."
+          showIcon="true" variant="warning">
+        </dsc-alert>
+        <div class="tab-content-font accordion-item" [ngClass]="controlaAberturaDoCardExcecoes?'show':''">
+          <section class="card noshadow p-3 fc mt-2 mb-2  ms-2 me-2 row">
+            <div class="exception-title mb-2">Selecione uma ou mais opções: <mat-icon
+                class="material-icons-outlined icon-info" title="Campo obrigatório">info</mat-icon></div>
+            <dsc-checkbox [disabled]="!excecaoSelecionada" (change)="onClickEmQualquerExcecao()"
+              label="Conta para débito da tarifa diferente da conta de repasse" variant="highlight" size="small"
+              [(ngModel)]="simulacao.excecoes.contaDebitoDiferente" class="col-12 col-lg-6"></dsc-checkbox>
+            <dsc-checkbox [disabled]="!excecaoSelecionada" (change)="onClickEmQualquerExcecao()"
+              label="Inibir retentativa" variant="highlight" size="small"
+              [(ngModel)]="simulacao.excecoes.inibirRetentativa" class="col-12 col-lg-6"></dsc-checkbox>
+            <dsc-checkbox [disabled]="!excecaoSelecionada" (change)="onClickEmQualquerExcecao()"
+              label="Minuta contratual fora do padrão" variant="highlight" size="small"
+              [(ngModel)]="simulacao.excecoes.minutaContratualForaPadrao" class="col-12 col-lg-6"></dsc-checkbox>
+            <dsc-checkbox [disabled]="!excecaoSelecionada" (change)="onClickEmQualquerExcecao()"
+              label="Minuta edital de credenciamento" variant="highlight" size="small"
+              [(ngModel)]="simulacao.excecoes.minutaEditalCredenciamento" class="col-12 col-lg-6"></dsc-checkbox>
+
+            <dsc-checkbox [disabled]="!excecaoSelecionada" (change)="onClickEmQualquerExcecao()" label="Outro"
+              variant="highlight" size="small" [(ngModel)]="simulacao.excecoes.outro"
+              class="col-12 col-lg-6"></dsc-checkbox>
+            <span class="tab-content-font accordion-item" [ngClass]="simulacao.excecoes.outro?'show':''">
+              <dsc-textarea variant="highlight" size="small" [(ngModel)]="simulacao.excecoes.textoOutro"
+                placeholder="Texto" maxlength="200"
+                [ngClass]="simulacao.excecoes.outro?'enabled':'disabled'"></dsc-textarea>
+            </span>
+          </section>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex justify-content-end">
+      <div class="col-auto">
+        <button class="accordion-button" (click)="controlaAberturaDoCardExcecoes = !controlaAberturaDoCardExcecoes">
+          <span class="accordion-title">{{controlaAberturaDoCardExcecoes?'Ver Menos':'Ver Mais'}}</span>
+          <mat-icon
+            class="material-icons">{{controlaAberturaDoCardExcecoes?'arrow_drop_up':'arrow_drop_down'}}</mat-icon>
+
+        </button>
+      </div>
+    </div>
+  </section>
+  <div class="justificativa-item" class="show">
+    <section *ngIf="(incluir == true || alterar == true) && cliente != null && simulacao != null"
+      class="card p-3 fc mb-5">
+      <div class="d-flex wrapper">
+        <div class="">
+          <mat-icon class="material-icons-outlined simulacao-icon" title="Cadastro Atualizado">edit</mat-icon>
+        </div>
+        <div class="flex-grow-1">
+          <span class="card-title ms-2">Justificativa</span>
+          <div class="card-rule ms-2"></div>
+          <section class="card noshadow justificativa-card fc mt-2 mb-2 ms-2">
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div class="exception-title mb-2 ms-2">Selecione:</div>
+                <div class="row mb-3">
+                  <dsc-radio-button label="Novo Convênio Pix Automático" name="convenio" variant="highlight"
+                    value="NOVO" [ngModel]="simulacao.convenio" size="small" class="row">
+                  </dsc-radio-button>
+                  <dsc-radio-button label="Alteração de Convênio Pix Automático" name="convenio" variant="highlight"
+                    value="ALTERACAO" [ngModel]="simulacao.convenio" size="small" class="row">
+                  </dsc-radio-button>
+                </div>
+
+              </div>
+              <div class="col-12 col-lg-6">
+                <div class="row mb-2 ps-2 pe-2 estimativa">
+                  <div class="exception-title mb-1">Estimativa PIX</div>
+                  <div class="row">
+                    <div class="col-auto mt-2">
+                      <span>Agendamentos Mês
+                        <mat-icon class="material-icons-outlined icon-info" title="Campo obrigatório">info</mat-icon>
+                      </span>
+                    </div>
+                    <div class="col-4 estimativa-input">
+                      <dsc-input label="" name="agendamentosMes" [(ngModel)]="simulacao.agendamentosMes" placeholder="0"
+                        size="small" class="no-input-hint"></dsc-input>
+                    </div>
+
+                    <div class="d-flex mt-2 ps-0">
+                      <div class="col-auto mt-2">
+                        <span>Ticket Médio
+                          <mat-icon class="material-icons-outlined icon-info" title="Campo obrigatório">info</mat-icon>
+                        </span>
+                      </div>
+                      <div class="col-4 estimativa-input">
+                        <dsc-input-currency label="" name="ticketMedio" [(ngModel)]="simulacao.ticketMedio"
+                          placeholder="R$ 0,00" size="small" class="no-input-hint"></dsc-input-currency>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 col-lg-6">
+                  <div class="row  mb-2 ps-2 pe-2">
+                    <div class="col-12 justificativa-input">
+                      Comentários
+                      <mat-icon class="material-icons-outlined icon-info" title="Campo obrigatório">info</mat-icon>
+                      <dsc-textarea label="" name="justificativa" placeholder="Preenchimento"
+                        [(ngModel)]="simulacao.justificativa" size="small" class="justificativa-textarea"
+                        maxlength="425" showCharCounter="425"></dsc-textarea>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="col-12 col-lg-6">
+                  <div class="row  mb-2 ps-2 pe-2">
+                    <div class="col-10 documentacao-input">
+                      <dsc-input-file label="Documentação" name="documentacao" placeholder="Documento"
+                        [(ngModel)]="simulacao.documentacao" size="small" labelHint="Opcional" multiple="true"
+                        accept=".pdf,.txt,.jpg,.jpeg" maxTotalSize="12000000"></dsc-input-file>
+                    </div>
+                    <div *ngIf="simulacao.documentacao" class="col-1 pt-4 mt-1">
+                      <dsc-button iconButton="true" icon='clear' variant="secondary-outlined" size="small"
+                        (click)="simulacao.documentacao = null" title="Remover arquivo"></dsc-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+
+  <ng-container *ngIf="(incluir == true || alterar == true) && cliente != null && simulacao != null"
+    class="card fc mb-5">
+    <div class="row d-flex justify-content-end">
+      <div class="col-auto">
+        <dsc-button label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+          (click)="processarCancelamentoInclusao(modalConfirmCancelarInclusao)"></dsc-button>
+      </div>
+      <div class="col-auto">
+        <dsc-button [label]="labelBotaoIncluirSimulacao" variant="primary" iconPrefix="check"
+          (click)="confirmarSolicitarAutorizacao(modalConfirmInclusao, modalInconsistencias)"
+          [disabled]="desabilitarBotaoIrParaSimulacao()">
+        </dsc-button>
+
+      </div>
+      <div class="col-auto"
+        dscTooltip="{{desabilitarBotaoIrparaContrato()? 'Existem restrições para inclusão de contrato' : 'Ir para contrato'}}"
+        [dscTooltipDisabled]="!desabilitarBotaoIrparaContrato()" dscTooltipVariant="highlight"
+        dscTooltipPosition="above">
+        <dsc-button [label]="descricaoIrParaContrato" variant="secondary" iconPrefix="description"
+          (click)="irContrato(modalInconsistencias)" [disabled]="desabilitarBotaoIrparaContrato()">
+        </dsc-button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!cliente && !message && !simuladorId">
+    <section class="card p-3 fc">
+      <div class="row">
+        <div class="col-12">
+          <div *ngIf="parametros" class="mb-2" [innerHTML]="obterTextoAbertura()"></div>
+          <div *ngIf="!parametros">
+            <dsc-progress-spinner [indeterminate]="true" label="Carregando..." [size]="20"></dsc-progress-spinner>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="mt-3">
+      <parcel *ngIf="parcelProps != null" [config]="ngconfig" [mountParcel]="mountRootParcel"
+        [customProps]="parcelProps"></parcel>
+    </div>
+
+  </ng-container>
+
+
+  <ng-container *ngIf="cliente?.cnpj && cliente?.simulacoes?.length == 0 && simulacao == null">
+    <section class="card p-3 fc">
+      <div class="row">
+        <div class="col-12">
+          <div class="mb-2">Utilize este <strong>Simulador Negocial do PIX Automático</strong> para pleitear condições
+            diferenciadas para o convênio, tais como:</div>
+          <ul>
+            <li>Tarifa com desconto;</li>
+            <li>Degustação (período com isenção de tarifa para o cliente experimentar o serviço)</li>
+            <li>Assinatura de minuta contratual fora do padrão;</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          Para incluir ou consultar uma simulação insira um filtro.
+        </div>
+      </div>
+
+      <div *ngIf="cliente?.cnpj && cliente?.simulacoes?.length == 0 && simulacao == null"
+        class="row d-flex justify-content-end">
+        <div class="col-auto">
+          <dsc-button label="Nova consulta" variant="secondary-outlined" (click)="limparConsulta()"
+            iconPrefix='restart_alt'></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Incluir Simulação" variant="primary" (click)="incluirSimulacao()"
+            title="Incluir nova simulação"></dsc-button>
+        </div>
+      </div>
+
+    </section>
+
+  </ng-container>
+
+
+
+  <ng-template #modalPixAutomatico let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        O que é PIX AUTOMÁTICO?
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+
+    <div class="modal-body content-presentation">
+      <!-- https://blog.asaas.com/pix-automatico/ -->
+      <div class="mb-2">
+        <p>O Pix Automático é uma nova função da modalidade de pagamentos instantâneos. Com essa nova funcionalidade, os
+          consumidores poderão programar seus pagamentos de contas para acontecer de forma automática. Sem necessidade
+          de realizar um pagamento manual.</p>
+        <p>Essa função é muito esperada porque vai ampliar a capacidade do Pix em otimizar os processos financeiros
+          internos, tanto de empresa quanto de consumidores pessoa física, que poderão ter mais praticidade na sua
+          rotina.</p>
+        <p>Vale ressaltar que o Pix automático só poderá ser feito para pessoas jurídicas ou CNPJ. Ou seja, clientes
+          pessoas físicas irão agendar seus pagamentos apenas para pagar as empresas.</p>
+      </div>
+      <div class="mb-2">
+        <label>Qual a diferença de Pix automático e débito automático?</label>
+        <p>Atualmente, o débito automático depende de negociações entre diversas instituições diferentes para que a
+          modalidade funcione. Isso torna o processo burocrático e aumenta os custos dentro da produção.</p>
+        <p>Já no Pix Automático, o consumidor ao contratar um serviço poderá simplesmente optar pelo pagamento via Pix
+          Automático dentro do seu aplicativo bancário, recebendo apenas uma notificação de confirmação de pagamento.
+        </p>
+        <p>Assim, não será necessário autenticar cada nova transação.</p>
+      </div>
+      <div class="mb-2">
+        <label>Como funciona o Pix automático?</label>
+        <p>A princípio, o Pix automático será usado para pagar, por exemplo:</p>
+        <ul>
+          <li>contas de água e luz</li>
+          <li>escolas e faculdades</li>
+          <li>academias, condomínios</li>
+          <li>parcelamento de empréstimos</li>
+        </ul>
+        <p>Além disso, novas categorias poderão ser aplicadas dentro da ferramenta. No geral, diferentes tipos de
+          serviço poderão ser utilizados dentro da plataforma. </p>
+        <p>Com isso, os consumidores ganham mais praticidade para sair da burocracia de pagamentos.</p>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="w-fc">
+        <dsc-button label="Fechar" variant="secondary" size="small" (click)="modal.close()"></dsc-button>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalCampanhas let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Campanhas Ativas
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="wrapper mb-3">
+        <table mat-table [dataSource]="campanhas" class="table-campanha" aria-describedby="campanhas">
+
+          <ng-container matColumnDef="campanhaNome">
+            <th mat-header-cell *matHeaderCellDef>Campanha</th>
+            <td mat-cell *matCellDef="let campanha">
+              {{campanha.nome}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="campanhaPeriodo">
+            <th mat-header-cell *matHeaderCellDef>Período</th>
+            <td mat-cell *matCellDef="let campanha">
+              {{campanha.periodo}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="campanhaConcessao">
+            <th mat-header-cell *matHeaderCellDef>Vantagens</th>
+            <td mat-cell *matCellDef="let campanha">
+              {{campanha.vantagens}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="campanhaPublicoAlvo">
+            <th mat-header-cell *matHeaderCellDef>Público Alvo</th>
+            <td mat-cell *matCellDef="let campanha">
+              {{campanha.publicoAlvo}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="campanhaDescricao">
+            <th mat-header-cell *matHeaderCellDef>Descrição</th>
+            <td mat-cell *matCellDef="let campanha">
+              {{campanha.descricao}}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="campanhaColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: campanhaColumns;"></tr>
+        </table>
+      </div>
+
+
+
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc">
+        <dsc-button label="Fechar" variant="secondary" size="small" (click)="modal.close()"></dsc-button>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalConfirmCancelarInclusao let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Cancelar inclusão da Simulação
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle">Confirma o cancelamento desta inclusão?</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Voltar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Confirmar" variant="primary" iconPrefix="check" (click)="cancelarInclusao()"></dsc-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalInclusao let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Simulação incluída com sucesso!
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle mb-2">Nº da Simulação: {{simulacao?.id}}</div>
+      <div class="modal-subtitle">Atenção:
+        <span class="modal-text-content">Caso a simulação seja aprovada, ficará válida por 30 dias para
+          contratação.</span>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc">
+        <dsc-button label="Fechar" variant="secondary" iconPrefix="close" (click)="retornar()"></dsc-button>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalMessage let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Atenção
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5 centralize">
+      <div class="modal-subtitle">{{modalContent.title}}</div>
+      <div>{{modalContent.description}}</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Fechar" variant="secondary" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalConfirmInclusao let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Incluir Simulação
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle">Confirma a inclusão desta simulação?</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <button class="custom-button" (click)="solicitarAutorizacao(modalInclusao)">
+            <mat-icon *ngIf="sppinerIsLoading" class="spinner2">refresh</mat-icon>
+            <mat-icon *ngIf="!sppinerIsLoading">add</mat-icon>
+            {{labelModalIncluir}}
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalConfirmAprovacao let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Aprovar Simulação
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle">Deseja aprovar a simulação com as condições informadas?</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Confirmar" variant="primary" iconPrefix="send"
+            (click)="aprovarSimulacao(modalSimulacaoAprovada)"></dsc-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalConfirmReprovacao let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Reprovar Simulação
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle">Deseja reprovar a simulação?</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Confirmar" variant="primary" iconPrefix="send"
+            (click)="reprovarSimulacao(modalSimulacaoReprovada)"></dsc-button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+
+  <ng-template #modalConfirmContraProposta let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Contraproposta
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle">Deseja enviar uma contraproposta?</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Confirmar" variant="primary" iconPrefix="send"
+            (click)="enviarContraProposta()"></dsc-button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalConfirmNovaContraProposta let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Contraproposta
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle">Deseja enviar uma contraproposta?</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Confirmar" variant="primary" iconPrefix="send"
+            (click)="enviarNovaContraProposta(modalContraProposta)"></dsc-button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalContraProposta let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Contraproposta
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle mb-2">Contraproposta enviada com sucesso!</div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc">
+        <dsc-button label="Fechar" variant="secondary" iconPrefix="close"
+          (click)="retornarAvaliarSimulacao(true)"></dsc-button>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalSimulacaoAprovada let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Simulação aprovada
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle mb-2">Simulação aprovada com sucesso!</div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc">
+        <dsc-button label="Fechar" variant="secondary" iconPrefix="close"
+          (click)="retornarAvaliarSimulacao(true)"></dsc-button>
+      </div>
+    </div>
+
+  </ng-template>
+
+
+  <ng-template #modalSimulacaoReprovada let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Simulação reprovada
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle mb-2">Simulação reprovada com sucesso!</div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc">
+        <dsc-button label="Fechar" variant="secondary" iconPrefix="close"
+          (click)="retornarAvaliarSimulacao(true)"></dsc-button>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalInconsistencias let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Inconsistências identificadas
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-subtitle m-3">Verifique os apontamentos abaixo antes de prosseguir </div>
+      <ul>
+        <li *ngFor="let message of messageList">{{message}}</li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Fechar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+
+  <ng-template #modalCopiarSimulacao let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Copiar e criar nova Simulação?
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle">Deseja criar nova Simulação?</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Confirmar" variant="primary" iconPrefix="send" (click)="copiarSimulacao()"></dsc-button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalComentarioAceite let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Aceitar Contraproposta
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-3">
+      <div class="modal-subtitle">Deseja incluir um comentário?
+        <div class="row">
+          <dsc-textarea label="" name="comentario" placeholder="Preencher" [(ngModel)]="avaliacaoJustificativa"
+            size="small" class="justificativa-textarea" maxlength="425" showCharCounter="425"></dsc-textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Não incluir" variant="secondary-outlined" iconPrefix="close"
+            (click)="avaliacaoJustificativa = null; aprovarSimulacao(modalSimulacaoAprovada)"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Incluir" variant="primary" iconPrefix="close"
+            (click)="aprovarSimulacao(modalSimulacaoAprovada)"></dsc-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalComentarioRecusa let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Recusar Contraproposta
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-3">
+      <div class="modal-subtitle">Deseja incluir um comentário?
+        <div class="row">
+          <dsc-textarea label="" name="comentario" placeholder="Preencher" [(ngModel)]="avaliacaoJustificativa"
+            size="small" class="justificativa-textarea" maxlength="425" showCharCounter="425"></dsc-textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Não incluir" variant="secondary-outlined" iconPrefix="close"
+            (click)="avaliacaoJustificativa = null; reprovarSimulacao(modalSimulacaoReprovada)"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Incluir" variant="primary" iconPrefix="close"
+            (click)="reprovarSimulacao(modalSimulacaoReprovada)"></dsc-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalContrapropostaAprovada let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Aceitar Contraproposta
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle mb-2">Confirma o aceite das condições da contraproposta da Simulação?</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Confirmar" variant="primary" iconPrefix="close"
+            (click)="avaliarContraProposta(modalComentarioAceite)"></dsc-button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #modalContrapropostaRecusada let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        Recusar Contraproposta
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5">
+      <div class="modal-subtitle mb-2">Confirma a recusa das condições da contraproposta da Simulação?</div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Confirmar" variant="primary" iconPrefix="close"
+            (click)="avaliarContraProposta(modalComentarioRecusa)"></dsc-button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+</div>
+
+<ng-template #pleitearCondicoesDiferenciadas>
+  <section class="section noshadow fc mt-2 mb-2 ms-2 row gap-3">
+    <dsc-alert *ngIf="!deveMostrarAlertResultadoAlcada()"
+      message="Indique o grupo, os valores de tarifas e o prazo de degustação. Em seguida, calcule a alçada."
+      variant="info">
+    </dsc-alert>
+    <form #formTarifa="ngForm">
+      <div class="row d-flex justify-content-between align-items-center">
+        <dsc-input-currency #pgCaixaInput="ngModel" name="pgCaixa" placeholder="R$ 0.00" size="standard"
+          [(ngModel)]="tarifaDiferenciadaDaListaDeTarifas.pgCaixa"
+          [max]="obterMaximoPermitidoTarifaDiferenciada(enumParametros.TARIFA_TARIFAS_AGENDAMENTO_CAIXA)" required
+          class="col-auto" label="Pagadores CAIXA"></dsc-input-currency>
+
+        <dsc-input-currency #pgOutrosInput="ngModel" name="pgOutros" placeholder="R$ 0.00" size="standard"
+          [(ngModel)]="tarifaDiferenciadaDaListaDeTarifas.pgOutros"
+          [max]="obterMaximoPermitidoTarifaDiferenciada(enumParametros.TARIFA_TARIFAS_AGENDAMENTO_OUTROS)" required
+          class="col-auto" label="Pagadores Outros Bancos"></dsc-input-currency>
+
+        <dsc-input-currency #pgRetentativaInput="ngModel" name="retentativa" placeholder="R$ 0.00" size="standard"
+          [(ngModel)]="tarifaDiferenciadaDaListaDeTarifas.retentativa"
+          [max]="obterMaximoPermitidoTarifaDiferenciada(enumParametros.TARIFA_TARIFAS_RETENTATIVA)" required
+          class="col-auto" label="Tarifa Retentativa"></dsc-input-currency>
+
+        <dsc-input #pgDegustacaoInput="ngModel" name="degustacao" placeholder="0 Dia" size="standard"
+          [(ngModel)]="tarifaDiferenciadaDaListaDeTarifas.degustacao" required class="col-auto"
+          label="Degustação"></dsc-input>
+
+        <div [dscTooltip]="definirtextoTooltipCalcular()" dscTooltipVariant="highlight" dscTooltipPosition="above"
+          class="col-auto">
+          <dsc-button *ngIf="!btnIsCalculando; else spinnerCalculando" class="col-auto" label="Calcular" size="standard"
+            (click)="novoCalcularAlcada()" [disabled]="btnIsCalculando || !podeClicarBtnCalcularAlcada()"></dsc-button>
+        </div>
+      </div>
+    </form>
+    <dsc-alert *ngIf="deveMostrarAlertResultadoAlcada()" showIcon="true" [message]="mensagemAlertResultadoCalculoAlcada"
+      [title]="tituloAlertResultadoCalculoAlcada" [variant]="variantAlertResultadoCalculoAlcada">
+    </dsc-alert>
+  </section>
+</ng-template>
+<ng-template #spinnerCalculando>
+  <div class="col-auto pe-2">
+    <dsc-progress-spinner [size]="20" [indeterminate]="true" label="Calculando"></dsc-progress-spinner>
+  </div>
+</ng-template>
+
+<ng-template #loadingToast>
+  <div class="d-flex align-items-center gap-2">
+    <dsc-progress-spinner [size]="25" [indeterminate]="true"></dsc-progress-spinner>
+    <span>{{mensagemSnackBarLoading}}</span>
+  </div>
+</ng-template>
