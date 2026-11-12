@@ -1,0 +1,163 @@
+<div class="modal-header">
+  <div class="titulo-modal">Resumo da Simulação</div>
+  <div class="modal-header-close">
+    <mat-icon class="material-icons fechar-modal" title="Fechar" (click)="activeModal.dismiss()">close</mat-icon>
+  </div>
+</div>
+
+<div class="modal-body pt-0 centralize" *ngIf="dados">
+
+  <div *ngIf="dados.ocorreuExcepcionalizacao && (dados.infoAlcadaAlert?.varianteAlert === 'warning')" class="pt-2">
+    <!-- Alert de excepcionalização -->
+    <dsc-alert title="Alçada Calculada: Alçada Matriz"
+      message="Houve excepcionalização, será necessário análise pela Matriz." showIcon="true" variant="warning">
+    </dsc-alert>
+  </div>
+
+  <div *ngIf="(dados.infoAlcadaAlert?.varianteAlert === 'success')" class="pt-2">
+    <!-- Alert de aprovação -->
+    <dsc-alert
+      [title]="dados.infoAlcadaAlert?.alcadaCalculada === 'Indefinida' ? 'Alçada Calculada: Agência' : 'Alçada Calculada: ' + dados.infoAlcadaAlert?.alcadaCalculada"
+      message="Para estas condições, a simulação está pré aprovada!" showIcon="true" variant="success">
+    </dsc-alert>
+  </div>
+
+  <div *ngIf="!dados.ocorreuExcepcionalizacao && (dados.infoAlcadaAlert?.varianteAlert === 'warning')" class="pt-2">
+    <!--Alert de pedido de autorização-->
+    <dsc-alert [title]="'Alçada Calculada: ' + dados.infoAlcadaAlert?.alcadaCalculada"
+      [message]="'Para estas condições será necessário aprovação da ' + dados.infoAlcadaAlert?.alcadaCalculada"
+      showIcon="true" variant="warning">
+    </dsc-alert>
+  </div>
+
+
+  <div class="sub-titulo-modal">Tarifa</div>
+
+  <div class="card">
+    <div class="card-body row">
+
+      <div class="grupoMcAnual">
+        <p class="grupo">{{dados.grupo}}</p>
+        <p class="mcAnual">{{dados.infoGrupo}}</p>
+      </div>
+
+      <div class="tarifa">
+
+        <div>
+          <div class="titulo-card">Pagadores Caixa</div>
+          <div class="valor-card">{{ dados.tarifaPgCaixa | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</div>
+        </div>
+
+        <div>
+          <div class="titulo-card">Pagadores Outros Bancos</div>
+          <div class="valor-card">{{ dados.tarifaPgOutros | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</div>
+        </div>
+
+        <div>
+          <div class="titulo-card">Tarifa Retentativa</div>
+          <div class="valor-card">{{ dados.tarifaRetentativa | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</div>
+        </div>
+
+        <div>
+          <div class="titulo-card">Degustação</div>
+          <div class="valor-card">{{dados.diasDegustacao}}</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-titulo-modal">Exceções</div>
+
+  <div class="card">
+    <div class="card-body row">
+      <div class="excecoes">
+        <!-- Verifica se pelo menos uma exceção é verdadeira ou se textoOutro não está vazio -->
+
+        <ng-container *ngIf="dados.ocorreuExcepcionalizacao; else nenhumaExcecao">
+          <div class="check" *ngIf="dados.excecoes?.contaDebitoDiferente">
+            <span class="material-icons-outlined check-circle">check_circle</span>
+            <div class="titulo-card">Conta para débito da tarifa diferente da conta de repasse</div>
+          </div>
+
+          <div class="check" *ngIf="dados.excecoes?.inibirRetentativa">
+            <span class="material-icons-outlined check-circle">check_circle</span>
+            <div class="titulo-card">Inibir retentativa</div>
+          </div>
+
+          <div class="check" *ngIf="dados.excecoes?.inibirOpenFinance">
+            <span class="material-icons-outlined check-circle">check_circle</span>
+            <div class="titulo-card">Inibir Open Finance</div>
+          </div>
+
+          <div class="check" *ngIf="dados.excecoes?.minutaContratualForaPadrao">
+            <span class="material-icons-outlined check-circle">check_circle</span>
+            <div class="titulo-card">Minuta contratual fora do padrão</div>
+          </div>
+
+          <div class="check" *ngIf="dados.excecoes?.minutaEditalCredenciamento">
+            <span class="material-icons-outlined check-circle">check_circle</span>
+            <div class="titulo-card">Minuta edital de credenciamento</div>
+          </div>
+
+          <!-- Renderiza textoOutro se estiver preenchido -->
+          <div class="check" *ngIf="dados.excecoes.textoOutro">
+            <span class="material-icons-outlined check-circle">check_circle</span>
+            <div class="titulo-card">{{ dados.excecoes.textoOutro }}</div>
+          </div>
+        </ng-container>
+
+        <!-- Mensagem para o caso de nenhuma exceção selecionada e textoOutro vazio -->
+        <ng-template #nenhumaExcecao>
+          <div class="titulo-card">Nenhuma exceção foi selecionada</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-titulo-modal">Informações adicionais</div>
+  <div class="card">
+    <div class="card-body row">
+
+      <div class="row">
+        <div class="col-6 d-flex flex-column justify-content-start gap-1">
+          <div class="grupoMcAnual">Agendamento Mês</div>
+          <div class="valor-card">{{ dados.agendamentosPorMes}}</div>
+        </div>
+
+        <div class="col-6 d-flex flex-column justify-content-start gap-1">
+          <div class="grupoMcAnual">Ticket Médio</div>
+          <div class="valor-card">{{ dados.ticketMedio| currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</div>
+        </div>
+      </div>
+      <div class="justificativa-texto">
+        <span class="grupoMcAnual">Justificativa</span>
+        <span class="valor-card">{{dados.justificativa}}</span>
+      </div>
+      <span class="grupoMcAnual">Anexos</span>
+
+      <div class="arquivo-tamanho" *ngIf="dados.documento">
+        <div class="check">
+          <span class="material-icons-outlined clips">attach_file</span>
+          <span class="titulo-card">{{ dados.documento.nome }}</span>
+        </div>
+        <span class="titulo-card">{{ (dados.documento.tamanho / 1024) | number:'1.0-2' }} kB</span>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <div class="row justify-content-end">
+      <div class="col-auto">
+        <dsc-button label="Fechar" variant="secondary-outlined" (click)="onFecharResumo()"></dsc-button>
+      </div>
+      <div class="col-auto">
+        <dsc-button [label]="dados.labelBotaoConfirmar"
+          [variant]="dados.labelBotaoConfirmar == descricaoIrParaContrato ? 'secondary' : 'primary'"
+          (click)="onConfirmarSimulacao()">
+        </dsc-button>
+      </div>
+    </div>
+  </div>
+</div>
