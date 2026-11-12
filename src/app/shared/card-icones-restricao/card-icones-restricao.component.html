@@ -1,0 +1,56 @@
+<section class="card cabecalho-card fc mb-4">
+  <div class="card-body flex-row d-flex align-items-start">
+    <div class="flex-grow-1">
+      <label *ngIf="!dadosEmpresaLoading && razaoSocial; else spinnerCarregando"
+        class="cliente-label">{{razaoSocial}}</label>
+      <div class="cliente-content">
+        <span>CNPJ: {{cnpjFormatado}}</span>
+      </div>
+    </div>
+
+
+    <!--aqui fica os metodos dos tootips-->
+    <div class="d-flex flex-row gap-3">
+
+      <mat-icon *ngIf="!sicowLoading && sicowSig(); else spinnerCarregando" class="material-icons cliente-icon"
+        dscTooltip="{{obterDescricaoIconeRestricaoCliente('sicow', sicowSig())}}" dscTooltipVariant="highlight"
+        [ngClass]="obterClasseIconeRestricoesCliente(sicowSig())">policy</mat-icon>
+
+      <mat-icon *ngIf="!contaPjLoading && contaPjSig(); else spinnerCarregando" class="material-icons cliente-icon"
+        dscTooltip="{{obterDescricaoIconeRestricaoCliente('contaPJ', contaPjSig())}}" dscTooltipVariant="highlight"
+        [ngClass]="obterClasseIconeRestricoesCliente(contaPjSig())">account_balance</mat-icon>
+
+      <mat-icon *ngIf="!dadosEmpresaLoading && cadastroSig(); else spinnerCarregando" class="material-icons cliente-icon"
+        dscTooltip="{{obterDescricaoIconeRestricaoCliente('cadastro', cadastroSig())}}" dscTooltipVariant="highlight"
+        [ngClass]="obterClasseIconeRestricoesCliente(cadastroSig())">app_registration</mat-icon>
+
+        <mat-icon *ngIf="!fraudeLoading && fraudeSig(); else spinnerCarregando" class="material-icons cliente-icon"
+        dscTooltip="{{obterDescricaoIconeRestricaoCliente('fraude', fraudeSig())}}" dscTooltipVariant="highlight"
+        [ngClass]="obterClasseIconeRestricoesCliente(fraudeSig())">gavel</mat-icon>
+        
+    </div>
+
+  </div>
+
+  <div *ngIf="Inconsistencias.mensagens.length > 0" class="row fc mt-4">
+    <div class="d-flex">
+      <div class="flex-grow-1 ps-3">
+        <label class="cliente-label client-warning">{{Inconsistencias.titulo}}</label>
+        <div *ngIf="Inconsistencias.mensagens.length > 0" class="cliente-content">
+          <ul>
+            <li *ngFor="let item of Inconsistencias.mensagens" class="small400 mb-0">
+              {{item}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<ng-template #spinnerCarregando>
+  <div class="pe-2">
+    <dsc-progress-spinner [size]="15" [indeterminate]="true"></dsc-progress-spinner>
+  </div>
+</ng-template>
