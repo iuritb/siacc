@@ -1,0 +1,26 @@
+// Mixins
+@mixin head-small-600 {
+  font: var(--dsc-typography-head-small-600);
+}
+
+// Tipografia
+.icone-titulo {
+  padding: 0;
+  color: var(--dsc-color-secondary-70);
+  font-size: var(--dsc-font-size-larger);
+  width: auto;
+  height: auto;
+}
+
+.descricao-titulo {
+  color: var(--dsc-color-primary-90);
+  @include head-small-600;
+}
+
+.input-filtro {
+  width: 33%;
+}
+
+.standard400 {
+  font: var(--dsc-typography-text-standard-400) !important;
+}
