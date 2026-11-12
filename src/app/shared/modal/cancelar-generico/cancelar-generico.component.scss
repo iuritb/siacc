@@ -1,0 +1,61 @@
+.modal-header-close {
+  position: absolute;
+  right: 0.625rem;
+}
+
+.modal-subtitle {
+  font: var(--dsc-typography-text-standard-600);
+  color: #3A4859;
+}
+
+.titulo-modal {
+  font-family: var(--dsc-font-family-1) !important;
+  font-size: var(--dsc-font-size-small) !important;
+  font-weight: var(--dsc-font-weight-600) !important;
+  color: var(--dsc-color-bg-highlight-5) !important;
+}
+
+.modal-confirmar-excluir-convenio {
+  width: 100%;
+  gap: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 3px solid #B22222;
+  border-right: 3px solid #B22222;
+  border-bottom: 3px solid #B22222;
+  border-left: 9px solid #B22222;
+  padding: 15px;
+  font-weight: bold;
+}
+
+.texto-modal-confirma-exclusao-convenio {
+  width: 90%;
+}
+
+.modal-confirmar-excluir-convenio mat-icon {
+  flex-shrink: 0;
+}
+
+.modal-confirmar-excluir-convenio span {
+  text-align: left;
+}
+
+.label-justificativa {
+  font-family: var(--dsc-font-family-1) !important;
+  font-size: var(--dsc-font-size-nano) !important;
+  font-weight: var(--dsc-font-weight-600) !important;
+}
+
+.required {
+  font-family: var(--dsc-font-family-1) !important;
+  font-size: var(--dsc-font-size-micro) !important;
+  font-weight: var(--dsc-font-weight-600) !important;
+  color: var(--dsc-color-content-danger-1);
+  margin-right: 2px;
+}
+
+::ng-deep mat-form-field .mat-mdc-form-field-subscript-wrapper {
+  display: block !important;
+}
