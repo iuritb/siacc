@@ -1,0 +1,56 @@
+<div class="d-grid gap-3 p-4" data-qa="detalhamento-agendamento-lote-component-conteudo-wrapper">
+  <div data-qa="detalhamento-agendamento-lote-component-cabecalho-wrapper">
+    <span class="application-subtitle" data-qa="detalhamento-agendamento-lote-component-subtitulo">Autorizações/Agendamentos</span>
+    <div class="row d-flex flex-wrap align-items-center justify-content-between"
+      data-qa="detalhamento-agendamento-lote-component-cabecalho-linha">
+      <div class="col-auto" data-qa="detalhamento-agendamento-lote-component-titulo-wrapper">
+        <h2 class="dsc-tx-azu-st btx-tx-md-fw7-120 rfe-sz-29" data-qa="detalhamento-agendamento-lote-component-titulo">
+          <mat-icon class="material-icons application-icon"
+            data-qa="detalhamento-agendamento-lote-component-titulo-icone">pix</mat-icon>
+          <span class="application-title" data-qa="detalhamento-agendamento-lote-component-titulo-texto">
+            Detalhes do Agendamento
+          </span>
+        </h2>
+      </div>
+      <div class="col-auto mb-2" data-qa="detalhamento-agendamento-lote-component-btn-voltar-topo-wrapper">
+        <dsc-button data-qa="detalhamento-agendamento-lote-component-btn-voltar-topo" label="Voltar" variant="auxiliary"
+          size="small" (click)="voltarTabela()"></dsc-button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading(); else detalhamentoAgendamentoLoteComponentDetalhe"
+    data-qa="detalhamento-agendamento-lote-component-loading-wrapper">
+    <div class="pe-2" data-qa="detalhamento-agendamento-lote-component-spinner-wrapper">
+      <dsc-progress-spinner data-qa="detalhamento-agendamento-lote-component-spinner" [size]="20" [indeterminate]="true"
+        label="Carregando"></dsc-progress-spinner>
+    </div>
+  </div>
+</div>
+
+<ng-template #detalhamentoAgendamentoLoteComponentAlertaErro>
+  <div *ngIf="mensagemErro() as erro" data-qa="detalhamento-agendamento-lote-component-alerta-erro-wrapper"
+    class="d-flex align-items-center gap-3">
+    <div class="flex-fill">
+      <dsc-alert data-qa="detalhamento-agendamento-lote-component-alerta-erro" variant="danger" [title]="erro.titulo"
+        [list]="erro.listaMensagem" showIcon="true" role="alert" aria-live="assertive">
+      </dsc-alert>
+    </div>
+    <div data-qa="detalhamento-agendamento-lote-component-btn-voltar-erro-wrapper">
+      <dsc-button data-qa="detalhamento-agendamento-lote-component-btn-voltar-erro" label="Voltar" variant="auxiliary"
+        size="small" (click)="voltarTabela()"></dsc-button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #detalhamentoAgendamentoLoteComponentDetalhe>
+  <div *ngIf="!mensagemErro(); else detalhamentoAgendamentoLoteComponentAlertaErro"
+    data-qa="detalhamento-agendamento-lote-component-detalhamento-wrapper">
+    <app-detalhamento data-qa="detalhamento-agendamento-lote-component-detalhamento-componente"
+      [dados]="dadoDetalhado()" [tipo]="detalhamentoTipoEnum.AGENDAMENTO"></app-detalhamento>
+    <div class="d-flex justify-content-end" data-qa="detalhamento-agendamento-lote-component-btn-voltar-rodape-wrapper">
+      <dsc-button data-qa="detalhamento-agendamento-lote-component-btn-voltar-rodape" label="Voltar" variant="auxiliary"
+        size="small" (click)="voltarTabela()"></dsc-button>
+    </div>
+  </div>
+</ng-template>
