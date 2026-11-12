@@ -1,0 +1,28 @@
+.botao {
+  font-family: var(--dsc-font-family-1) !important;
+  font-size: var(--dsc-font-size-smaller) !important;
+  font-weight: var(--dsc-font-weight-600) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  background-color: white;
+  color: gray;
+  border: solid, 0.5px, #E0E0E0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  gap: 10px;
+}
+
+.botao:hover {
+  background-color: var(--dsc-color-primary-90);
+  color: white;
+  border: none;
+}
+
+.selecionado {
+  background-color: var(--dsc-color-primary-90);
+  color: white;
+  border: none;
+}
