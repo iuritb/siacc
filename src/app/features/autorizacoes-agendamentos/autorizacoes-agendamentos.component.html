@@ -1,0 +1,88 @@
+<!-- Versionamento -->
+<ng-container>
+  <div class="mfe-identity">
+    <span class="mfe-versao">v.{{versaoRelatorioAutorizacaoAgendamento}}</span>
+  </div>
+</ng-container>
+
+<!-- Apresentação do filtro -->
+<ng-container *ngIf="mostrarFiltro()">
+  <div class="p-4 d-grid gap-3">
+    <div>
+      <span class="application-subtitle">Autorizações/Agendamentos</span>
+      <h2 class="dsc-tx-azu-st btx-tx-md-fw7-120 rfe-sz-29 dsc-m-b-24">
+        <mat-icon class="material-icons application-icon">pix</mat-icon>
+        <span class="application-title">Qual consulta deseja realizar?</span>
+      </h2>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-3" *ngFor="let opcao of opcoesDeRelatorio()">
+        <button class="botao w-100" (click)="configuraDestino(opcao)"
+          [ngClass]="{ 'selecionado': destinoSelecionado() === opcao.destino}">
+          <span class="material-icons-outlined icones">{{opcao.icon}}</span>
+          {{opcao.label}}
+        </button>
+      </div>
+    </div>
+    <app-filtro-dinamico *ngIf="opcaoSelecionada()" [opcao]="opcaoSelecionada()" [btnIsLoading]="btnIsLoading()"
+      (queryParams)="onQueryParams($event)" [patchValue]="patchValue()"></app-filtro-dinamico>
+    <br />
+    <br />
+    <br />
+    <br />
+  </div>
+</ng-container>
+
+<!---------------------------------------------------TABELA---------------------------------------------------->
+<ng-container *ngIf="mostrarTabela()" [ngSwitch]="paginaParaMostrar()">
+  <ng-container *ngSwitchCase="enumOpcoesDePagina.AUTORIZACAO">
+    <ng-container *ngIf="retornoAPIRec() as recorrencias; else destinoInvalido">
+      <app-tabela-autorizacao [parametrosOriginais]="parametrosSemPaginacao()" [retornoAPI]="recorrencias"
+        (onVoltarFiltro)="voltarParaDestino(enumOpcoesDePagina.FILTRO)"
+        (onListarAgendamentos)="onListarAgendamentos($event)"></app-tabela-autorizacao>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="enumOpcoesDePagina.LOTE">
+    <ng-container *ngIf="retornoAPILote() as lotes; else destinoInvalido">
+      <div data-qa="autorizacoes-agendamentos-lotes-wrapper">
+        <app-lote-agendamentos-shell data-qa="autorizacoes-agendamentos-lote-agendamentos-shell"
+          [parametrosOriginais]="parametrosSemPaginacao()" [retornoAPI]="lotes"
+          (onVoltarFiltro)="voltarParaDestino(enumOpcoesDePagina.FILTRO)"></app-lote-agendamentos-shell>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="enumOpcoesDePagina.AGENDAMENTO">
+    <ng-container *ngIf="retornoAPICobR() as cobrancas; else destinoInvalido">
+      <app-lista-agendamento [parametrosOriginais]="parametrosSemPaginacao()" [retornoAPI]="cobrancas"
+        [origemDosDados]="origemDosDadosDoAgendamento()" (onVoltar)="voltarParaDestino($event)"></app-lista-agendamento>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    <ng-container [ngTemplateOutlet]="destinoInvalido"></ng-container>
+  </ng-container>
+</ng-container>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<ng-template #destinoInvalido>
+  <div class="pt-5 d-flex align-items-center" data-qa="autorizacao-agendamento-destino-invalido-wrapper">
+    <div class="col-10" data-qa="autorizacao-agendamento-destino-invalido">
+      <dsc-alert title="Destino selecionado não é válido ou nenhum resultado encontrado."
+        message="Tente novamente mais tarde, caso o problema persista, entre em contato com o suporte." variant="danger"
+        showIcon="true" role="alert" aria-live="assertive">
+      </dsc-alert>
+    </div>
+    <div class="col-auto">
+      <dsc-button data-qa="autorizacao-agendamento-btn-voltar-destino-invalido"
+        (click)="voltarParaDestino(enumOpcoesDePagina.FILTRO)" label="Voltar" variant="auxiliary" size="small">
+      </dsc-button>
+    </div>
+  </div>
+</ng-template>
