@@ -1,0 +1,116 @@
+<div class="p-4 d-flex gap-4 flex-column" data-qa="debito-manual-pagina-wrapper">
+
+  <!-- Título da página e versão -->
+  <div class="d-flex gap-2 flex-column" data-qa="debito-manual-cabecalho-wrapper">
+    <div class="application-subtitle" data-qa="debito-manual-cabecalho-subtitulo">Pix Automático</div>
+    <div class="d-flex flex-row justify-content-between align-items-baseline"
+      data-qa="debito-manual-cabecalho-linha-titulo">
+      <div class="d-flex gap-2 align-items-center flex-row" data-qa="debito-manual-cabecalho-titulo-wrapper">
+        <mat-icon class="icone-titulo" data-qa="debito-manual-cabecalho-titulo-icone">handshake</mat-icon>
+        <span class="descricao-titulo" data-qa="debito-manual-cabecalho-titulo-texto">Débitos Manuais Pendentes</span>
+      </div>
+    </div>
+  </div>
+
+  <section data-qa="debito-manual-secao-filtros">
+    <div class="card p-4 pt-3" data-qa="debito-manual-filtros-card">
+      <div class="d-flex justify-content-start flex-column gap-1 mb-3"
+        data-qa="debito-manual-filtros-descricao-wrapper">
+        <p class="m-0 p-0" data-qa="debito-manual-filtros-descricao-texto">O padrão da tela já inicia em
+          <b>Somente Pendentes</b>. Ao selecionar <b>Sucesso</b>, o
+          filtro de convênio e mês/ano é exibido abaixo.
+        </p>
+      </div>
+
+      <form [formGroup]="consultaModeForm" class="d-flex flex-column gap-3" data-qa="debito-manual-modo-consulta-form">
+        <div class="d-flex flex-column gap-2" data-qa="debito-manual-filtro-status-fieldset">
+          <div class="standard400 mb-0" data-qa="debito-manual-filtro-status-label">Modo de consulta</div>
+          <div class="d-flex flex-row flex-wrap gap-3" data-qa="debito-manual-filtro-status-wrapper">
+            <dsc-radio-button data-qa="debito-manual-radio-somente-pendentes" class="standard400"
+              formControlName="modoConsulta" label="Somente Pendentes" variant="highlight"
+              [value]="EnumModoConsultaDebitoManualPendente.PENDENTES" size="small">
+            </dsc-radio-button>
+            <dsc-radio-button data-qa="debito-manual-radio-todos" class="standard400" formControlName="modoConsulta"
+              label="Sucesso" variant="highlight" [value]="EnumModoConsultaDebitoManualPendente.SUCESSO" size="small">
+            </dsc-radio-button>
+          </div>
+        </div>
+      </form>
+
+      <div *ngIf="exibirFiltroAvancado" class="mt-4" data-qa="debito-manual-filtro-avancado-wrapper">
+        <dsc-accordion [accordionItems]="accordionItems"
+          data-qa="debito-manual-filtro-avancado-accordion"></dsc-accordion>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="podeMostrarTabela()" data-qa="debito-manual-secao-listagem">
+    <!-- Card da contendo tabela e input para filtro semântico -->
+    <div class="card p-4 pt-3" data-qa="debito-manual-listagem-card">
+
+      <div class="d-flex flex-row align-items-center justify-content-between gap-3 mb-2"
+        data-qa="debito-manual-filtro-busca-wrapper">
+        <div class="input-filtro me-auto" data-qa="debito-manual-filtro-busca-campo-wrapper">
+          <dsc-input [formControl]="inputFiltro" placeholder="Encontrar nos débitos pendentes" iconPrefix="search"
+            type="text" maxlength="20" showClearButton="false" size="small"
+            data-qa="debito-manual-filtro-busca-campo"></dsc-input>
+        </div>
+      </div>
+
+      <!-- Spinner enquanto está carregando os convênios pendentes -->
+      <div *ngIf="isLoading()" class="m-5 p-5" data-qa="debito-manual-loading-wrapper">
+        <dsc-progress-spinner [indeterminate]="true" label="Carregando débitos manuais..."
+          data-qa="debito-manual-loading-spinner" />
+      </div>
+
+      <!-- Caso não encontre debitos pendentes na busca exibe mensagem informativa -->
+      <div *ngIf="!isLoading() &&!mensagemErro() && debitosFormatadosFiltrados().length === 0" style="height: 10rem;"
+        class="mh-100 text-muted p-4 d-flex align-items-start justify-content-center"
+        data-qa="debito-manual-estado-vazio-wrapper">
+        <span data-qa="debito-manual-estado-vazio-texto">Nenhum débito manual pendente foi encontrado.</span>
+      </div>
+
+      <!-- Caso erro ao obter debitos pendentes apresenta mensagem informativa -->
+      <div *ngIf="!isLoading() && mensagemErro() as erro" class="d-flex align-items-center gap-3"
+        data-qa="debito-manual-estado-erro-wrapper">
+        <div class="flex-fill" data-qa="debito-manual-estado-erro-alerta-wrapper">
+          <dsc-alert variant="danger" [title]="erro.titulo" [list]="erro.listaMensagem" showIcon="true" role="alert"
+            aria-live="assertive" data-qa="debito-manual-estado-erro-alerta">
+          </dsc-alert>
+        </div>
+      </div>
+
+      <!-- Caso encontre debitos pendentes na busca -->
+      <div *ngIf="!isLoading() && !mensagemErro() && debitosFormatadosFiltrados().length > 0"
+        data-qa="debito-manual-resultado-wrapper">
+
+        <!-- Card com os debitos pendentes -->
+        <div *ngIf="debitosFormatadosFiltrados().length > 0" class="d-flex flex-column gap-3"
+          data-qa="debito-manual-lista-cards-wrapper">
+          <div class="card shadow shadow-sm"
+            *ngFor="let debito of debitosFormatadosFiltrados(); let i = index; trackBy: trackByConvenioPeriodo"
+            [attr.data-qa]="'debito-manual-card-wrapper-' + i">
+            <app-card-debito-pendente (acaoAutorizar)="abrirModalAutorizar($event)"
+              (acaoRetentar)="abrirModalRetentar($event)" (acaoAcertoManual)="abrirModalAcertoManual($event)"
+              [index]="i" [debitoFormatado]="debito"
+              [attr.data-qa]="'debito-manual-card-componente-' + i"></app-card-debito-pendente>
+          </div>
+
+          <mat-paginator [length]="totalItensFiltrados()" [pageSize]="paginacao().itensPorPagina"
+            [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="onPageChange($event)"
+            data-qa="debito-manual-paginador">
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<br>
+<br>
+<br>
+<br>
+<ng-template #filtroDinamico>
+  <app-filtro-dinamico [opcao]="filtroAvancado" [btnIsLoading]="isLoading()" (queryParams)="onQueryParams($event)"
+    data-qa="debito-manual-filtro-dinamico-componente">
+  </app-filtro-dinamico>
+</ng-template>
