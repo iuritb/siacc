@@ -1,0 +1,39 @@
+flowchart TD
+    A["Entrada na página /simulador"] --> B["Inicializa host, permissões, parâmetros, situações, campanhas e preferências"]
+    B --> C{"simuladorId foi informado?"}
+
+    C -- Sim --> D["Busca detalhes da simulação"]
+    D --> E["Exibe detalhe, tarifas, exceções, pareceres e documentos"]
+    E --> F{"Ação disponível conforme situação, alçada e permissões"}
+    F --> G["Avaliar: aprovar ou reprovar"]
+    F --> H["Emitir contraproposta"]
+    F --> I["Cancelar via modal genérico"]
+    F --> J["Copiar para nova simulação"]
+
+    C -- Não --> K["Tela de pesquisa"]
+    K --> L["Sanitiza e valida o termo"]
+    L --> M{"Número curto ou CNPJ?"}
+    M -- "Número de simulação" --> N["Consulta por número"]
+    M -- CNPJ válido --> O["Consulta por CNPJ"]
+    M -- Inválido --> P["Exibe mensagem de validação"]
+    N --> Q["Monta tabela de simulações e carrega tarifas"]
+    O --> Q
+    Q --> R["Detalhar uma simulação ou iniciar inclusão"]
+
+    R --> D
+    R --> S["Incluir simulação, se a permissão permitir"]
+    S --> T["Seleciona tarifa e preenche parâmetros, exceções e justificativa"]
+    T --> U{"Condição diferenciada?"}
+    U -- Sim --> V["Valida valores e grupo; calcula alçada"]
+    U -- Não --> W["Mantém tarifa selecionada"]
+    V --> X["Define alçada, alertas e ações permitidas"]
+    W --> X
+    X --> Y["Valida dados e apresenta resumo para confirmação"]
+    Y --> Z["Envia simulação"]
+    Z --> AA{"Solicitou ir para contrato?"}
+    AA -- Sim --> AB["Guarda dados em sessionStorage e direciona ao convênio"]
+    AA -- Não --> AC["Apresenta retorno da inclusão"]
+
+    G --> AD["POST avaliação; atualiza detalhe"]
+    H --> AE["POST contraproposta; atualiza detalhe"]
+    I --> AF["DELETE cancelamento; retorna/atualiza consulta"]
