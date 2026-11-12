@@ -1,0 +1,93 @@
+<ng-container
+  *ngIf="{ debito: debito(), isSending: isSending(), cobrancasParaAutorizar: cobrancasParaAutorizar() } as vm">
+  <div class="modal-header" data-qa="modal-autorizar-debito-header">
+    <div class="titulo-modal" data-qa="modal-autorizar-debito-titulo">Autorizar Debito Manual</div>
+    <div class="modal-header-close">
+      <mat-icon class="material-icons" title="Fechar" (click)="fecharModal()"
+        data-qa="modal-autorizar-debito-fechar-icone">close</mat-icon>
+    </div>
+  </div>
+
+  <div class="modal-body mt-1 centralize" data-qa="modal-autorizar-debito-body">
+    <!-- Alert de informação -->
+    <dsc-alert variant="info" [showIcon]="true" data-qa="modal-autorizar-debito-alerta-info"
+      message="Revise os dados das cobrancas antes de confirmar a autorizacao.">
+    </dsc-alert>
+
+    <div class="descricao-modal mt-2 mb-2">
+      Convênio: <span class="destaque">{{ vm.debito.convenioId }}</span>
+      | Mês de referência: <span class="destaque">{{ vm.debito.descricaoMesReferencia }}</span>
+      | Data Prevista: <span class="destaque">{{ vm.debito.dataPrevistaFormatada }}</span>
+    </div>
+
+    <!-- Descrição das cobranças -->
+    <div class="descricao-modal mt-2 mb-2">Informações das cobranças:</div>
+
+    <!-- Spinner enquanto carrega -->
+    <div *ngIf="vm.isSending" class="text-center py-4" data-qa="modal-autorizar-debito-spinner-processando-wrapper">
+      <dsc-progress-spinner [indeterminate]="true" label="Processando..."
+        data-qa="modal-autorizar-debito-spinner-processando" />
+    </div>
+
+    <!-- Cards de detalhes das cobranças (layout expandido) -->
+    <ng-container *ngIf="!vm.isSending">
+      <div class="row g-3 justify-content-center mb-3" data-qa="modal-autorizar-debito-cards-container">
+        <div *ngFor="let cobranca of vm.cobrancasParaAutorizar" class="col-12 col-md-4"
+          [attr.data-qa]="'modal-autorizar-debito-card-wrapper-' + cobranca.tipo">
+          <div class="card cobranca-info-card">
+            <div class="card-body">
+              <div class="titulo-card mb-3">{{ cobranca.tipoFormatado }}</div>
+
+              <div class="cobranca-item">
+                <div class="legenda">Valor</div>
+                <div class="valor-card">{{ cobranca.valorFormatado }}</div>
+              </div>
+
+              <div class="cobranca-item">
+                <div class="legenda">Situação</div>
+                <div [ngClass]="obterClasseStatusDebitoManual(cobranca.situacao)" class="status-badge">
+                  {{ cobranca.situacaoFormatada }}
+                </div>
+              </div>
+
+              <div *ngIf="cobranca.dataSituacao" class="cobranca-item">
+                <div class="legenda">Data da situação</div>
+                <div class="valor-card small text-muted">{{ cobranca.dataSituacaoFormatada }}</div>
+              </div>
+
+              <div *ngIf="cobranca.descricaoSituacao" class="cobranca-item">
+                <div class="legenda">Descrição</div>
+                <div class="valor-card small text-muted">{{ cobranca.descricaoSituacao }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="descricao-modal mt-2">
+        Você confirma a execução da ação sobre o valor apurado de
+        <span class="destaque">{{ vm.debito.valorApurado }}</span>?
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer" data-qa="modal-autorizar-debito-footer">
+    <div class="row justify-content-end w-100">
+      <div class="col-auto">
+        <dsc-button label="Fechar" variant="auxiliary" (click)="fecharModal()" size="small"
+          data-qa="modal-autorizar-debito-botao-fechar">
+        </dsc-button>
+      </div>
+
+      <div class="col-auto" *ngIf="!vm.isSending && vm.debito.podeAutorizar">
+        <dsc-button label="Autorizar" variant="primary" (click)="onAutorizar()" [disabled]="vm.isSending" size="small"
+          data-qa="modal-autorizar-debito-botao-autorizar">
+        </dsc-button>
+      </div>
+
+      <div class="col-auto" *ngIf="vm.isSending && (vm.debito.podeAutorizar || vm.debito.podeRetentar)">
+        <dsc-progress-spinner [size]="25" [indeterminate]="true" label="Enviando os dados"
+          data-qa="modal-autorizar-debito-spinner-enviando"></dsc-progress-spinner>
+      </div>
+    </div>
+  </div>
+</ng-container>
