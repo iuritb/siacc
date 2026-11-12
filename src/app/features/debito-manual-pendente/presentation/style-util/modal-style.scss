@@ -1,0 +1,86 @@
+.titulo-card {
+  font-family: var(--dsc-font-family-1) !important;
+  font-size: var(--dsc-font-size-quark) !important;
+  font-weight: var(--dsc-font-weight-600) !important;
+}
+
+.valor-card {
+  font-family: var(--dsc-font-family-1) !important;
+  font-size: var(--dsc-font-size-micro) !important;
+  font-weight: var(--dsc-font-weight-600) !important;
+
+  &.valor-destaque {
+    font-size: var(--dsc-font-size-small) !important;
+    font-weight: var(--dsc-font-weight-700) !important;
+    color: var(--dsc-color-text-primary);
+  }
+}
+
+.descricao-modal {
+  font-family: var(--dsc-font-family-1) !important;
+  font-size: var(--dsc-font-size-micro) !important;
+  font-weight: var(--dsc-font-weight-400) !important;
+}
+
+.destaque {
+  font-family: var(--dsc-font-family-1) !important;
+  font-weight: var(--dsc-font-weight-700) !important;
+}
+
+.titulo-modal {
+  font: var(--dsc-typography-head-tiny-600) !important;
+  color: var(--dsc-color-content-highlight-1) !important;
+}
+
+.legenda {
+  font-family: var(--dsc-font-family-1) !important;
+  font-size: var(--dsc-font-size-quark) !important;
+  font-weight: var(--dsc-font-weight-400) !important;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: var(--dsc-font-size-quark) !important;
+  font-weight: var(--dsc-font-weight-600) !important;
+}
+
+.cobranca-item {
+  margin-bottom: 12px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.modal-header-close {
+  cursor: pointer;
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: var(--dsc-color-text-primary);
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.centralize {
+  text-align: left;
+}
+
+.small {
+  font-size: var(--dsc-font-size-quark) !important;
+}
+
+.text-muted {
+  color: var(--dsc-color-text-secondary) !important;
+}
+
+.cobranca-info-card {
+  transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
