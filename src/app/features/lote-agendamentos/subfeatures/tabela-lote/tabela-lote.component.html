@@ -1,0 +1,91 @@
+<section data-qa="tabela-lote-wrapper">
+  <div class="d-grid gap-3 p-4" data-qa="tabela-lote-conteudo-wrapper">
+    <div data-qa="tabela-lote-cabecalho-wrapper">
+      <span class="application-subtitle" data-qa="tabela-lote-subtitulo">Autorizações/Agendamentos</span>
+      <div class="row d-flex flex-wrap align-items-center justify-content-between"
+        data-qa="tabela-lote-cabecalho-linha">
+        <div class="col-auto" data-qa="tabela-lote-titulo-wrapper">
+          <h2 class="dsc-tx-azu-st btx-tx-md-fw7-120 rfe-sz-29" data-qa="tabela-lote-titulo">
+            <mat-icon class="material-icons application-icon" data-qa="tabela-lote-titulo-icone">pix</mat-icon>
+            <span class="application-title" data-qa="tabela-lote-titulo-texto">
+              Lotes encontrados
+            </span>
+          </h2>
+        </div>
+        <div class="col-auto mb-2" data-qa="tabela-lote-btn-voltar-topo-wrapper">
+          <dsc-button data-qa="tabela-lote-btn-voltar-topo" label="Voltar" variant="auxiliary" size="small"
+            (click)="voltarFiltro()"></dsc-button>
+        </div>
+      </div>
+    </div>
+
+    <div data-qa="tabela-lote-header-wrapper">
+      <app-header data-qa="tabela-lote-header" [dadoPrimario]="parametroPrimarioHeader()"
+        [dadoSecundario]="parametroSecundarioHeader()">
+      </app-header>
+    </div>
+
+    <div class="card p-4" data-qa="tabela-lote-card-wrapper">
+      <table class="tabela-personalizada" aria-describedby="Tabela de Lotes" data-qa="tabela-lote-tabela">
+        <thead data-qa="tabela-lote-tabela-cabecalho">
+          <tr data-qa="tabela-lote-tabela-cabecalho-linha">
+            <th class="coluna-padrao" data-qa="tabela-lote-coluna-convenio">Convênio</th>
+            <th class="coluna-padrao" data-qa="tabela-lote-coluna-id">Lote</th>
+            <th class="coluna-padrao" data-qa="tabela-lote-coluna-data-envio">Data de envio</th>
+            <th class="coluna-padrao" data-qa="tabela-lote-coluna-status">Status do lote</th>
+            <th class="coluna-padrao" data-qa="tabela-lote-coluna-total-solicitacoes">Total solicitações</th>
+            <th class="coluna-acoes" data-qa="tabela-lote-coluna-acoes">Ação</th>
+          </tr>
+        </thead>
+        <tbody data-qa="tabela-lote-tabela-corpo">
+          <tr *ngFor="let lote of lotesFormatados(); let rowIndex = index; trackBy: trackByLote"
+            [attr.data-qa]="'tabela-lote-linha-' + rowIndex">
+
+            <td class="coluna-padrao" [attr.data-qa]="'tabela-lote-celula-convenio-' + rowIndex">
+              {{ lote.convenio }}
+            </td>
+
+            <td class="coluna-padrao pt-2 pb-2" [attr.data-qa]="'tabela-lote-celula-id-' + rowIndex">
+              <div [attr.data-qa]="'tabela-lote-id-wrapper-' + rowIndex">
+                <span class="caption-12-400" [attr.data-qa]="'tabela-lote-id-label-' + rowIndex">Id:</span>
+                {{ lote.id }}
+              </div>
+              <div [attr.data-qa]="'tabela-lote-nome-wrapper-' + rowIndex">
+                <span class="caption-12-400" [attr.data-qa]="'tabela-lote-nome-label-' + rowIndex">Nome:</span>
+                {{ lote.nome }}
+              </div>
+            </td>
+
+            <td class="coluna-padrao" [attr.data-qa]="'tabela-lote-celula-data-envio-' + rowIndex">
+              {{ lote.dataEnvioFormatada }}
+            </td>
+            <td class="coluna-padrao" [attr.data-qa]="'tabela-lote-celula-status-' + rowIndex">
+              {{ lote.situacaoFormatada }}
+            </td>
+            <td class="coluna-padrao" [attr.data-qa]="'tabela-lote-celula-total-solicitacoes-' + rowIndex">
+              {{ lote.totalSolicitacoes }}
+            </td>
+            <td class="coluna-acoes" [attr.data-qa]="'tabela-lote-celula-acoes-' + rowIndex">
+              <!-- Botão de detalhes agendamento -->
+              <dsc-button [attr.data-qa]="'tabela-lote-btn-listar-agendamentos-' + rowIndex" iconButton="true"
+                icon="calendar_month" variant="secondary-outlined" dscTooltipVariant="highlight"
+                dscTooltipPosition="left" (click)="listarAgendamentosDoLote(lote)"
+                dscTooltip="Clique para detalhar os agendamentos." size="small">
+              </dsc-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <mat-paginator data-qa="tabela-lote-paginador" [length]="paginacaoAtual().totalRegistros"
+        [pageSize]="paginacaoAtual().itensPorPagina" [pageIndex]="paginacaoAtual().paginaAtual"
+        (page)="onPageChange($event)" [pageSizeOptions]="pageSizeOptions">
+      </mat-paginator>
+    </div>
+
+    <div class="d-flex justify-content-end align-items-center" data-qa="tabela-lote-btn-voltar-rodape-wrapper">
+      <dsc-button data-qa="tabela-lote-btn-voltar-rodape" variant="auxiliary" label="Voltar" size="small"
+        (click)="voltarFiltro()"></dsc-button>
+    </div>
+  </div>
+</section>
