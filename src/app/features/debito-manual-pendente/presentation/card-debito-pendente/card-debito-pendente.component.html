@@ -1,0 +1,111 @@
+<div class="card-body row" [attr.data-qa]="'card-debito-pendente-card-corpo-' + index">
+  <div class="col-2" [attr.data-qa]="'card-debito-pendente-coluna-convenio-' + index">
+    <div class="titulo-card" [attr.data-qa]="'card-debito-pendente-label-convenio-' + index">Convênio</div>
+    <div class="text-standard-600" [attr.data-qa]="'card-debito-pendente-convenio-valor-' + index">
+      {{debitoFormatado.convenioId}}
+    </div>
+  </div>
+
+  <div class="col-3" [attr.data-qa]="'card-debito-pendente-coluna-cliente-' + index">
+    <div class="titulo-card" [attr.data-qa]="'card-debito-pendente-label-cliente-' + index">Cliente</div>
+    <div class="text-standard-600 texto-truncado" [attr.data-qa]="'card-debito-pendente-cliente-razao-social-' + index"
+      [attr.title]="debitoFormatado.razaoSocial">
+      {{debitoFormatado.razaoSocial}}
+    </div>
+    <div class="text-standard-600" [attr.data-qa]="'card-debito-pendente-cliente-cnpj-valor-' + index">
+      <span class="caption-12-400" [attr.data-qa]="'card-debito-pendente-label-cnpj-' + index">CNPJ: </span>{{debitoFormatado.cnpj}}
+    </div>
+  </div>
+
+  <div class="col-2" [attr.data-qa]="'card-debito-pendente-coluna-mes-ref-' + index">
+    <div class="titulo-card" [attr.data-qa]="'card-debito-pendente-label-mes-ref-' + index">Mês Ref.</div>
+    <div class="text-standard-600" [attr.data-qa]="'card-debito-pendente-mes-ref-valor-' + index">
+      {{debitoFormatado.periodoFormatado}}
+    </div>
+    <div class="text-standard-600" [attr.data-qa]="'card-debito-pendente-data-prevista-valor-' + index">
+      <span class="caption-12-400" [attr.data-qa]="'card-debito-pendente-label-data-prevista-' + index">Data Prevista: </span>{{debitoFormatado.dataPrevistaFormatada}}
+    </div>
+  </div>
+
+  <div class="col-2" [attr.data-qa]="'card-debito-pendente-coluna-unidade-' + index">
+    <div class="titulo-card" [attr.data-qa]="'card-debito-pendente-label-unidade-' + index">Unidade</div>
+    <div class="text-standard-600" [attr.data-qa]="'card-debito-pendente-unidade-valor-' + index">
+      {{debitoFormatado.unidadeVinculacao}}
+    </div>
+  </div>
+
+  <div class="col-2" [attr.data-qa]="'card-debito-pendente-coluna-valor-apurado-' + index">
+    <div class="titulo-card" [attr.data-qa]="'card-debito-pendente-label-valor-apurado-' + index">Valor Apurado</div>
+    <div class="text-standard-600" [attr.data-qa]="'card-debito-pendente-valor-apurado-valor-' + index">
+      {{debitoFormatado.valorApurado}}
+    </div>
+  </div>
+
+  <div class="col-1 d-flex flex-column align-items-center"
+    [attr.data-qa]="'card-debito-pendente-coluna-acoes-' + index">
+    <div class="titulo-card" [attr.data-qa]="'card-debito-pendente-label-acoes-' + index">Ações</div>
+    <div class="d-flex flex-column align-items-center gap-2"
+      [attr.data-qa]="'card-debito-pendente-acoes-wrapper-' + index">
+      <div ngbDropdown placement="bottom-end" class="menu-acoes"
+        [attr.data-qa]="'card-debito-pendente-menu-acoes-' + index">
+        <dsc-button ngbDropdownToggle dscTooltip="Abrir menu de ações" dscTooltipVariant="highlight"
+          dscTooltipPosition="left" variant="secondary-outlined" size="small" icon="menu" iconButton="true"
+          [attr.data-qa]="'card-debito-pendente-btn-menu-acoes-' + index" aria-label="Abrir menu de ações">
+        </dsc-button>
+
+        <div ngbDropdownMenu class="menu-acoes-dropdown"
+          [attr.data-qa]="'card-debito-pendente-menu-acoes-dropdown-' + index"
+          [attr.aria-labelledby]="'card-debito-pendente-btn-menu-acoes-' + index">
+          <button type="button" ngbDropdownItem (click)="onToggleDetalhes()"
+            [attr.data-qa]="'card-debito-pendente-acao-ver-detalhes-' + index">
+            {{ detalhesExpandidos() ? 'Ocultar detalhes' : 'Ver detalhes' }}
+          </button>
+          <button *ngIf="debitoFormatado.podeAutorizar" type="button" ngbDropdownItem (click)="onAutorizarDebito()"
+            [attr.data-qa]="'card-debito-pendente-acao-autorizar-' + index">
+            Autorizar débito
+          </button>
+          <button *ngIf="debitoFormatado.podeRetentar" type="button" ngbDropdownItem (click)="onRetentarDebito()"
+            [attr.data-qa]="'card-debito-pendente-acao-retentar-' + index">
+            Retentar débito
+          </button>
+          <button *ngIf="debitoFormatado.podeAcertoManual" type="button" ngbDropdownItem (click)="onAcertoManual()"
+            [attr.data-qa]="'card-debito-pendente-acao-acerto-manual-' + index">
+            Acerto manual
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="detalhesExpandidos()" class="col-12 detalhes-expandido-wrapper"
+    [attr.data-qa]="'card-debito-pendente-detalhes-expandido-' + index">
+    <div class="row g-3 justify-content-center"
+      [attr.data-qa]="'card-debito-pendente-detalhes-expandido-cards-container-' + index">
+
+      <div *ngFor="let cobranca of debitoFormatado.cobrancasFormatadas" class="col-12 col-md-4"
+        [attr.data-qa]="'card-debito-pendente-detalhes-expandido-coluna-' + cobranca.tipo + '-' + index">
+        <div class="detalhes-expandido-coluna">
+          <div class="titulo-card">{{ cobranca.tipoFormatado }}</div>
+          <div class="text-standard-600"
+            [attr.data-qa]="'card-debito-pendente-detalhes-expandido-'  + cobranca.tipo + '-valor-'+ index">
+            <span class="caption-12-400">Valor: </span>{{cobranca.valorFormatado}}
+          </div>
+          <div class="text-standard-600"
+            [attr.data-qa]="'card-debito-pendente-detalhes-expandido-' + cobranca.tipo + '-situacao-' + index">
+            <span class="caption-12-400">Situação: </span>
+            <span class="status-badge" [ngClass]="obterClasseStatusDebitoManual(cobranca.situacao)">{{cobranca.situacaoFormatada}}</span>
+          </div>
+          <div *ngIf="cobranca.dataSituacao" class="text-standard-600"
+            [attr.data-qa]="'card-debito-pendente-detalhes-expandido-' + cobranca.tipo + '-data-situacao-' + index">
+            <span class="caption-12-400">Data da situação: </span>{{cobranca.dataSituacaoFormatada}}
+          </div>
+          <div *ngIf="cobranca.descricaoSituacao" class="text-standard-600"
+            [attr.data-qa]="'card-debito-pendente-detalhes-expandido-' + cobranca.tipo + '-descricao-' + index">
+            <span class="caption-12-400">Descrição: </span>{{cobranca.descricaoSituacao}}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
