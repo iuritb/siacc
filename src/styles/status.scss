@@ -1,0 +1,12 @@
+@use './cores' as cores;
+
+.status-criada { color: cores.$color-criada; }
+.status-solicitada { color: cores.$color-solicitada; }
+.status-agendada { color: cores.$color-agendada; }
+.status-paga { color: cores.$color-paga; }
+.status-cancelada { color: cores.$color-cancelada; }
+.status-rejeitada { color: cores.$color-rejeitada; }
+.status-expirada { color: cores.$color-expirada; }
+.status-aprovada { color: cores.$color-aprovada; }
+.status-ativa { color: cores.$color-ativa; }
+.status-concluida { color: cores.$color-concluida; }
