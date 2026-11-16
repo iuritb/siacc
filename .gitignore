@@ -45,5 +45,5 @@ Thumbs.db
 coverage/lcov-report/
 
 # Agents e Docs de IA
-/.github
-/docs
+# /.github
+# /docs
