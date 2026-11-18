@@ -1,0 +1,587 @@
+<div class="content  max-w1000b">
+  <h3>
+    <mat-icon class="material-icons-outlined application-icon">attach_money</mat-icon>
+    <span class="application-title">Relatório de Remessas</span>
+    <div class="pull-right padding-left-10">
+      <dsc-button iconButton="true" variant="secondary" (click)="loadData()" size="small" icon="autorenew"
+        title="Atualizar dados"></dsc-button>
+    </div>
+    <div *ngIf="host" class="pull-right">
+      <dsc-datepicker placeholder="DD/MM/AAAA" class="noSize" size="small" [ngModel]="dataFiltro"
+        (ngModelChange)="alterarDataFiltro($event)">
+      </dsc-datepicker>
+    </div>
+    <div class="pull-right">
+      <dsc-checkbox *ngIf="verificarUsuario()" label="Interação" variant="highlight" size="small" [(ngModel)]="editMode"
+        class="col-12 col-lg-6" (change)="editModeChange()" title="Ativar/Desativar integração"></dsc-checkbox>
+      <dsc-checkbox label="Automático" variant="highlight" size="small" [(ngModel)]="autoRefresh"
+        class="col-12 col-lg-6" (change)="autoRefreshChange()" title="Atualização Automática"></dsc-checkbox>
+    </div>
+  </h3>
+
+  <dsc-tab-group class="tab-group-remessas-consolidados">
+    <dsc-tab label="Remessas">
+      <ng-container *ngTemplateOutlet="conteudoRemessas"></ng-container>
+    </dsc-tab>
+    <dsc-tab label="Consolidados">
+      <ng-container *ngTemplateOutlet="conteudoConsolidados"></ng-container>
+    </dsc-tab>
+  </dsc-tab-group>
+
+  <ng-template #conteudoConsolidados>
+    <section class="section fc mt-2 consolidado-section">
+      <div class="row full-row">
+        <div class="col-12">
+          <strong class="blue-label">Consolidados do dia selecionado</strong>
+        </div>
+        <div class="col-12 mt-2">
+          <p class="consolidado-descricao mb-0">
+            Demonstração com dados mockados para consulta e download de arquivo consolidado CNAB.
+          </p>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-12">
+          <label class="mb-2">Lista de consolidados ({{consolidadoDiarioMock.dataMovimento}})</label>
+          <div class="consolidado-search-row mb-2">
+            <dsc-input name="convenioConsolidado" [(ngModel)]="filtroConvenioConsolidado"
+              placeholder="Pesquisar por convênio" size="small"></dsc-input>
+          </div>
+          <div class="wrapper mb-3 table-scroll">
+            <table class="table table-sm table-consolidado-resumo"
+              aria-describedby="Lista de consolidados do dia selecionado">
+              <thead>
+                <tr>
+                  <th>Tipo Remessa</th>
+                  <th>Arquivo</th>
+                  <th>Convênio</th>
+                  <th>Sequencial</th>
+                  <th>Data/Hora Situação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of listaConsolidadosFiltrada">
+                  <td>{{item.tipoRemessa}}</td>
+                  <td>
+                    <a href="#" (click)="baixarConsolidadoMock($event, item.nomeArquivo)"
+                      class="downloadLink">{{item.nomeArquivo}}</a>
+                  </td>
+                  <td>{{item.convenio}}</td>
+                  <td>{{item.sequencial}}</td>
+                  <td>{{item.dataHoraSituacao}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-2" *ngIf="verificarUsuarioMatrizConsolidado()">
+        <div class="col-12">
+          <div class="consolidado-card-retorno">
+            <label class="mb-2">Retorno Consolidado</label>
+            <div class="wrapper table-scroll">
+              <table class="table table-sm table-consolidado-ocorrencias" aria-describedby="Card Retorno Consolidado">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>Situação</th>
+                    <th>Data do processamento</th>
+                    <th>Hora do processamento</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of consolidadoDiarioMock.retornosConsolidados">
+                    <td>
+                      <a href="#" (click)="baixarConsolidadoMock($event, item.nome)"
+                        class="downloadLink">{{item.nome}}</a>
+                    </td>
+                    <td>{{item.tipo}}</td>
+                    <td>{{item.situacao}}</td>
+                    <td>{{item.dataProcessamento}}</td>
+                    <td>{{item.horaProcessamento}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-template>
+
+  <ng-template #conteudoRemessas>
+
+    <section class="section fc mt-2">
+      <div class="row full-row">
+        <div class="col-12">
+          <strong class="blue-label">Remessas</strong>
+          <dsc-input class="float-right" name="convenio" [(ngModel)]="convenio" placeholder="Nº do convenio (opcional)"
+            size="small" (change)="loadData()"></dsc-input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="tab-content-font accordion-item">
+          <div class="wrapper mb-3 table-scroll mt-2">
+            <table mat-table [dataSource]="dataSourceRemessa" class="table-convenios"
+              aria-describedby="Relatorio de Remessa">
+
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>#</th>
+                <td mat-cell *matCellDef="let item"> {{item.id}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="tipoRemessa">
+                <th mat-header-cell *matHeaderCellDef>Tipo Remessa</th>
+                <td mat-cell *matCellDef="let item"> {{item.tipoRemessa}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nomeArquivo">
+                <th mat-header-cell *matHeaderCellDef>Arquivo</th>
+                <td mat-cell *matCellDef="let item">
+                  <a href="#" (click)="downloadRemessa($event, item.nomeArquivo)"
+                    class="downloadLink">{{item.nomeArquivo}}</a>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="convenio">
+                <th mat-header-cell *matHeaderCellDef>Convênio</th>
+                <td mat-cell *matCellDef="let item"> {{item.convenio}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sequencial">
+                <th mat-header-cell *matHeaderCellDef>Sequencial</th>
+                <td mat-cell *matCellDef="let item"> {{item.sequencial}} </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="dataHoraEntrada">
+                <th mat-header-cell *matHeaderCellDef>Data/Hora</th>
+                <td mat-cell *matCellDef="let item"> {{item.dataHoraEntrada}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="situacao">
+                <th mat-header-cell *matHeaderCellDef>Situação</th>
+                <td mat-cell *matCellDef="let item"> {{item.situacao}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="dataHoraSituacao">
+                <th mat-header-cell *matHeaderCellDef>Data/Hora Situação</th>
+                <td mat-cell *matCellDef="let item"> {{item.dataHoraSituacao}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nomeArquivoRetorno">
+                <th mat-header-cell *matHeaderCellDef>Arquivo Retorno</th>
+                <td mat-cell *matCellDef="let item">
+                  <a *ngIf="item.nomeArquivoRetorno" href="#" (click)="downloadRetorno($event, item.nomeArquivoRetorno)"
+                    class="downloadLink">{{item.nomeArquivoRetorno}}</a>
+                  <div *ngIf="!item.nomeArquivoRetorno">---</div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nomeArquivoControle">
+                <th mat-header-cell *matHeaderCellDef>Arquivo Controle</th>
+                <td mat-cell *matCellDef="let item">
+                  <a *ngIf="item.nomeArquivoControle" href="#"
+                    (click)="downloadControle($event, item.nomeArquivoControle)"
+                    class="downloadLink">{{item.nomeArquivoControle}}</a>
+                  <div *ngIf="!item.nomeArquivoControle">---</div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nomeArquivoScript">
+                <th mat-header-cell *matHeaderCellDef>Arquivo Script</th>
+                <td mat-cell *matCellDef="let item">
+                  <a *ngIf="item.nomeArquivoScript" href="#" (click)="downloadScript($event, item.nomeArquivoScript)"
+                    class="downloadLink">{{item.nomeArquivoScript}}</a>
+                  <div *ngIf="!item.nomeArquivoScript">---</div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="nomeArquivoResultadoScript">
+                <th mat-header-cell *matHeaderCellDef>Arquivo Resultado do Script</th>
+                <td mat-cell *matCellDef="let item">
+                  <a *ngIf="item.nomeArquivoResultadoScript" href="#"
+                    (click)="downloadResultadoScript($event, item.nomeArquivoResultadoScript)"
+                    class="downloadLink">{{item.nomeArquivoResultadoScript}}</a>
+                  <div *ngIf="!item.nomeArquivoResultadoScript">---</div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="comandos">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td *matCellDef="let item" class="mat-column-cell-comandos">
+                  <div class="btn-group" role="group">
+                    <button class="btn" dscTooltipVariant="highlight" title="Redisponibilizar"
+                      (click)="redisponibilizarRemessa($event, item.id)">
+                      <mat-icon class="material-icons-outlined label-success">cloud_sync</mat-icon>
+                    </button>
+                    <button class="btn" dscTooltipVariant="highlight" title="Apagar"
+                      (click)="removerRemessa($event, item.id)">
+                      <mat-icon class="material-icons-outlined label-danger">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dataHoraRetorno">
+                <th mat-header-cell *matHeaderCellDef>Data/Hora Retorno</th>
+                <td mat-cell *matCellDef="let item"> {{item.dataHoraRetorno ? item.dataHoraRetorno : "---" }} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="tabelaRemessa; sticky:true"></tr>
+              <tr mat-row *matRowDef="let row; columns: tabelaRemessa;" (click)="clickRemessa(row)"
+                class="row-selectable" [ngClass]="styleRemessa(row)"></tr>
+            </table>
+          </div>
+        </div>
+  <section class="section fc mt-2">
+    <div class="row full-row">
+      <div class="col-12">
+        <strong class="blue-label">Remessas</strong>
+        <dsc-input class="float-right" name="convenio" [(ngModel)]="convenio" placeholder="Nº do convenio (opcional)"
+          size="small" (change)="loadData()"></dsc-input>
+      </div>
+
+
+
+
+      <div *ngIf="editMode" class="row d-flex justify-content-end">
+        <div class="col-auto">
+          <dsc-button label="Validar Arquivo" variant="secondary-outlined" (click)="validarArquivo.click()"
+            icon="upload" dscTooltipVariant="highlight" dscTooltipPosition="left"></dsc-button>
+          <input type="file" accept=".*" #validarArquivo (change)="uploadArquivo($event)" class="hide" />
+        </div>
+
+        <div class="col-auto">
+          <dsc-button label="Enviar Remessa" variant="secondary" (click)="envioRemessa.click()" icon="upload"
+            dscTooltipVariant="highlight" dscTooltipPosition="left"></dsc-button>
+          <input type="file" accept=".*" #envioRemessa (change)="uploadRemessa($event)" class="hide" />
+        </div>
+
+        <div class="col-auto">
+          <dsc-button label="Processar" variant="primary" (click)="geradorRemessa()"
+            title="Processar Remessas"></dsc-button>
+        </div>
+
+        <div class="col-auto">
+          <dsc-button label="Reiniciar" variant="danger" (click)="reiniciarRemessa()"
+            title="Reiniciar processamento de remessa"></dsc-button>
+        </div>
+      </div>
+
+    </section>
+    <br />
+
+    <section *ngIf="remessaSelected" class="section fc mt-2">
+      <div class="col-auto">
+        <strong class="blue-label">Itens de Remessa</strong>
+      </div>
+
+      <div class="tab-content-font accordion-item">
+
+        <div class="wrapper mb-3 table-scroll mt-2">
+          <table mat-table [dataSource]="dataSourceItemRemessa" class="table-convenios"
+            aria-describedby="Relatorio de Item de Remessa">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let item"> {{item.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="remessa">
+              <th mat-header-cell *matHeaderCellDef>Remessa</th>
+              <td mat-cell *matCellDef="let item"> {{item.remessa}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="situacao">
+              <th mat-header-cell *matHeaderCellDef>Situação</th>
+              <td mat-cell *matCellDef="let item"> {{item.situacao}} {{item.dependencia?"(" + item.dependencia +
+                ")":""}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tipo">
+              <th mat-header-cell *matHeaderCellDef>Tipo</th>
+              <td mat-cell *matCellDef="let item"> {{item.tipo}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="nome">
+              <th mat-header-cell *matHeaderCellDef>Nome</th>
+              <td mat-cell *matCellDef="let item"> {{item.nome}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="dataHoraSituacao">
+              <th mat-header-cell *matHeaderCellDef>Data/Hora Situação</th>
+              <td mat-cell *matCellDef="let item"> {{item.dataHoraSituacao}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="tabelaItemRemessa; sticky:true"></tr>
+            <tr mat-row *matRowDef="let row; columns: tabelaItemRemessa;" (click)="clickItemRemessa(row)"
+              class="row-selectable" [ngClass]="styleItemRemessa(row)"></tr>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+    <br />
+
+
+    <section *ngIf="itemRemessaSelected" class="section fc mt-2">
+      <div class="col-auto mb-2">
+        <strong class="blue-label">Item de Remessa</strong>
+      </div>
+      <div *ngIf="itemRemessaSelected.dadosRequisicao" class="col-12 ps-0 pe-0 mb-2">
+        <label class="mb-2">Dados do registro</label>
+        <div><textarea id="w3review" name="w3review" rows="3" disabled="disabled"
+            class="full-size fs-12 monospace">{{itemRemessaSelected.dadosRequisicao}}</textarea></div>
+      </div>
+
+      <div *ngIf="itemRemessaSelected.observacoes" class="col-12 ps-0 pe-0 mb-4">
+        <label class="mb-2">Observações</label>
+        <div><textarea id="w3review" name="w3review" rows="2" disabled="disabled"
+            class="full-size fs-12">{{itemRemessaSelected.observacoes}}</textarea></div>
+      </div>
+
+      <label *ngIf="dataSourceDetalheItemRemessa && dataSourceDetalheItemRemessa.data.length > 0"
+        class="mb-2">Integração</label>
+
+      <div *ngIf="dataSourceDetalheItemRemessa && dataSourceDetalheItemRemessa.data.length > 0"
+        class="tab-content-font accordion-item">
+
+        <div class="wrapper mb-3 table-scroll mt-2">
+          <table mat-table [dataSource]="dataSourceDetalheItemRemessa" class="table-convenios"
+            aria-describedby="Relatorio de Item de Remessa">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let item">{{item.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nome">
+              <th mat-header-cell *matHeaderCellDef>Nome</th>
+              <td mat-cell *matCellDef="let item">{{item.sistema}} - {{item.nome}}<br />{{item.descricao}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="codigoRetorno">
+              <th mat-header-cell *matHeaderCellDef>Data / Codigo</th>
+              <td mat-cell *matCellDef="let item">{{item.dataHoraProcessamento}}<br />{{item.codigoRetorno}}</td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="conteudoRequisicao">
+              <th mat-header-cell *matHeaderCellDef>Requisição</th>
+              <td mat-cell *matCellDef="let item">
+                <textarea id="requisicao" name="requisicao" rows="5" disabled="disabled"
+                  class="full-size fs-12 monospace">{{item.conteudoRequisicao}}</textarea>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="conteudoRetorno">
+              <th mat-header-cell *matHeaderCellDef>Retorno</th>
+              <td mat-cell *matCellDef="let item">
+                <textarea id="retorno" name="retorno" rows="5" disabled="disabled"
+                  class="full-size fs-12 monospace">{{item.conteudoRetorno}}</textarea>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="tabelaDetalheItemRemessa; sticky:true"></tr>
+            <tr mat-row *matRowDef="let row; columns: tabelaDetalheItemRemessa;" (click)="clickDetalheItemRemessa(row)"
+              class="row-selectable" [ngClass]="styleDetalheItemRemessa(row)"></tr>
+          </table>
+        </div>
+
+      </div>
+
+
+      <label *ngIf="dataSourceOcorrenciasItemRemessa && dataSourceOcorrenciasItemRemessa.data.length > 0"
+        class="mb-2">Ocorrências</label>
+
+      <div *ngIf="dataSourceOcorrenciasItemRemessa && dataSourceOcorrenciasItemRemessa.data.length > 0"
+        class="tab-content-font accordion-item">
+
+        <div class="wrapper mb-3 table-scroll mt-2">
+          <table mat-table [dataSource]="dataSourceOcorrenciasItemRemessa" class="table-convenios"
+            aria-describedby="Ocorrências de Item de Remessa">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let item">{{item.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="codigoRetorno">
+              <th mat-header-cell *matHeaderCellDef>Código</th>
+              <td mat-cell *matCellDef="let item">{{item.codigoRetorno}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="descricaoRetorno">
+              <th mat-header-cell *matHeaderCellDef>Descrição</th>
+              <td mat-cell *matCellDef="let item">{{item.descricaoRetorno}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="valor">
+              <th mat-header-cell *matHeaderCellDef>Valor</th>
+              <td mat-cell *matCellDef="let item">{{item.valor}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="tabelaOcorrenciasItemRemessa; sticky:true"></tr>
+            <tr mat-row *matRowDef="let row; columns: tabelaOcorrenciasItemRemessa;"
+              (click)="clickOcorrenciaItemRemessa(row)" class="row-selectable" [ngClass]="styleDetalheItemRemessa(row)">
+            </tr>
+          </table>
+        </div>
+
+      </div>
+
+      <label *ngIf="dataSourceSituacoesItemRemessa && dataSourceSituacoesItemRemessa.data.length > 0"
+        class="mb-2">Histórico</label>
+
+      <div *ngIf="dataSourceSituacoesItemRemessa && dataSourceSituacoesItemRemessa.data.length > 0"
+        class="tab-content-font accordion-item col-12 col-lg-6 ps-0">
+
+        <div class="wrapper mb-3 table-scroll mt-2">
+          <table mat-table [dataSource]="dataSourceSituacoesItemRemessa" class="table-convenios"
+            aria-describedby="Situações de Item de Remessa">
+
+            <ng-container matColumnDef="situacao">
+              <th mat-header-cell *matHeaderCellDef>Situação</th>
+              <td mat-cell *matCellDef="let item">{{item.situacao}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="dataHora">
+              <th mat-header-cell *matHeaderCellDef>Data/Hora</th>
+              <td mat-cell *matCellDef="let item">{{item.dataHora}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="tabelaSituacoesItemRemessa; sticky:true"></tr>
+            <tr mat-row *matRowDef="let row; columns: tabelaSituacoesItemRemessa;"
+              (click)="clickSituacaoItemRemessa(row)" class="row-selectable" [ngClass]="styleDetalheItemRemessa(row)">
+            </tr>
+          </table>
+        </div>
+
+      </div>
+
+      <div *ngIf="itemRemessaSelected.dadosRetorno" class="col-12 ps-0 pe-0 mb-2">
+        <label class="mb-2">Dados do retorno</label>
+        <div><textarea id="w3review" name="w3review" rows="3" disabled="disabled"
+            class="full-size fs-12 monospace">{{itemRemessaSelected.dadosRetorno}}</textarea></div>
+      </div>
+
+
+
+    </section>
+    <br />
+
+  </ng-template>
+
+  <ng-template #modalValidate let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        {{modalValidateContent.title}}
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-6">Arquivo: <strong>{{modalValidateContent.nomeArquivo}}</strong></div>
+        <div class="col-6">Data:
+          <strong class="pull-right">{{formataTimeStamp(modalValidateContent.dataValidacao)}}</strong>
+        </div>
+      </div>
+      <div class="row">
+        <div *ngIf="modalValidateContent.convenio" class="col-6">Convênio:
+          <strong class="pull-right">{{modalValidateContent.convenio}}</strong>
+        </div>
+        <div *ngIf="modalValidateContent.numRemessa" class="col-6">Num. Remessa:
+          <strong class="pull-right">{{modalValidateContent.numRemessa}}</strong>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">Qtd. Registros: <strong class="pull-right">{{modalValidateContent.qtdRegistros}}</strong>
+        </div>
+        <div class="col-6">Situação: <strong class="pull-right">{{modalValidateContent.situacao}}</strong></div>
+      </div>
+      <div *ngIf="modalValidateContent.registros && modalValidateContent.situacao != 'VALIDO'">
+        <hr />
+        <div *ngFor="let registro of modalValidateContent.registros">
+          <span><strong>{{registro.numero}}</strong>&nbsp;</span>
+          <span>-&nbsp;{{registro.nome}}&nbsp;</span>
+          <span class="float-right"><strong>{{registro.situacao}}</strong></span>
+          <div *ngIf="registro.inconsistencias">Inconsistências:
+            <ul>
+              <li *ngFor="let inconsistencia of registro.inconsistencias">
+                <strong>{{inconsistencia.campo}}</strong><br />{{inconsistencia.codigo}} - {{inconsistencia.descricao}}
+              </li>
+            </ul>
+          </div>
+          <br />
+        </div>
+        <br />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Fechar" variant="secondary" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalMessage let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        {{modalContent.title}}
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5 centralize">
+      <div>{{modalContent.description}}</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Fechar" variant="secondary" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #confirmMessage let-modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        {{ modalContent.title }}
+      </div>
+      <div class="modal-header-close">
+        <mat-icon class="material-icons" title="Fechar" (click)="modal.dismiss()">close</mat-icon>
+      </div>
+    </div>
+    <div class="modal-body m-5 centralize">
+      <div class="modal-subtitle">{{ modalContent.description }}</div>
+    </div>
+    <div class="modal-footer">
+      <div class="w-fc row">
+        <div class="col-auto">
+          <dsc-button ngbAutofocus label="Cancelar" variant="secondary-outlined" iconPrefix="close"
+            (click)="modal.close()"></dsc-button>
+        </div>
+        <div class="col-auto">
+          <dsc-button label="Confirmar" variant="primary" iconPrefix="send"
+            (click)="modalContent.success()"></dsc-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+</div>
