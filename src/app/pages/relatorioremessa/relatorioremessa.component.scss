@@ -1,0 +1,324 @@
+.blue-label {
+  color: var(--dsc-color-content-highlight-1);
+  font: var(--dsc-typography-text-large-600) !important;
+}
+
+
+.table-convenios .mat-mdc-header-row {
+  background-color: var(--dsc-color-grayscale-50) !important;
+  font: var(--dsc-typography-text-standard-400) !important;
+}
+
+.section-auto {
+  min-height: auto;
+}
+
+.table-scroll {
+  //max-height: 450px;
+  overflow: auto;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.space-end {
+  justify-content: end;
+}
+
+h3,
+.h3 {
+  color: var(--dsc-color-primary-90) !important;
+}
+
+.cdk-column-conta {
+  white-space: nowrap;
+}
+
+.cdk-column-tarifa {
+  white-space: nowrap;
+}
+
+.cdk-column-valor {
+  white-space: nowrap;
+}
+
+
+.cdk-column-datainclusao {
+  white-space: nowrap;
+  width: 170px;
+}
+
+.cdk-column-nomeArquivo {
+  max-width: 400px;
+  min-width: 300px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cdk-column-tipoRemessa {
+  min-width: 8rem;
+}
+
+.cdk-column-tentativa {
+  text-align: center;
+}
+
+.cdk-column-metodo {
+  text-align: center;
+}
+
+.cdk-column-tipo {
+  text-align: center;
+}
+
+.cdk-column-codigoRetorno {
+  text-align: center;
+  max-width: 110px;
+}
+
+.cdk-column-dataHoraProcessamento {
+  max-width: 170px;
+}
+
+.cdk-column-conteudoRequisicao {
+  max-width: 800px;
+  min-width: 400px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+
+.cdk-column-conteudoRetorno {
+  max-width: 800px;
+  min-width: 400px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cdk-column-situacao {
+  max-width: 200px;
+  min-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cdk-column-nomeArquivoRetorno {
+  max-width: 400px;
+  min-width: 300px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cdk-column-txid {
+  max-width: 100px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cdk-column-recorrencia {
+  max-width: 100px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.centralize {
+  text-align: center;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+
+.cdk-column-dataevento {
+  min-width: 180px;
+}
+
+
+.tab-picker {
+  position: absolute;
+  right: 25px;
+  top: 20px;
+  z-index: 999;
+}
+
+.padding-left-10 {
+  margin-left: 10px;
+}
+
+
+// .cdk-column-conteudoretorno {
+//   max-width: 300px;
+// }
+
+.pull-right {
+  float: right;
+}
+
+.inline-content {
+  display: contents;
+}
+
+.row-selectable {
+  cursor: pointer;
+}
+
+.row-selected {
+  background-color: lightgray;
+}
+
+.full-size {
+  width: 100%;
+}
+
+.fs-12 {
+  font-size: 12px !important;
+}
+
+.monospace {
+  font-family: monospace;
+}
+
+
+.mat-mdc-header-cell {
+  font-size: 14px;
+}
+
+.mat-mdc-cell {
+  font-size: 12px;
+}
+
+.float-right {
+  float: right;
+  text-align: right;
+}
+
+.full-row {
+  width: 100%;
+}
+
+.downloadLink {
+  font-size: 12px !important;
+}
+
+.tab-group-remessas-consolidados {
+  margin-top: 12px;
+}
+
+.consolidado-section {
+  border: 1px solid var(--dsc-color-grayscale-40);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.consolidado-descricao {
+  color: var(--dsc-color-bg-neutral-7);
+  font-size: 12px;
+}
+
+.consolidado-card-info {
+  border: 1px solid var(--dsc-color-grayscale-40);
+  border-radius: 6px;
+  background-color: var(--dsc-color-bg-neutral-1);
+  min-height: 82px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+}
+
+.consolidado-label {
+  color: var(--dsc-color-bg-neutral-6);
+  font-size: 11px;
+}
+
+.table-consolidado-resumo,
+.table-consolidado-ocorrencias {
+  width: 100%;
+
+  thead th {
+    background-color: var(--dsc-color-grayscale-50);
+    font-weight: 600;
+    font-size: 12px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  tbody td {
+    font-size: 12px;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+
+.consolidado-search-row {
+  display: flex;
+  justify-content: flex-end;
+
+  dsc-input {
+    min-width: 280px;
+    max-width: 360px;
+  }
+}
+
+.consolidado-detalhe-card {
+  border: 1px solid var(--dsc-color-grayscale-40);
+  border-radius: 6px;
+  background-color: var(--dsc-color-bg-neutral-1);
+  padding: 12px;
+}
+
+.consolidado-card-retorno {
+  border: 1px solid var(--dsc-color-grayscale-40);
+  border-radius: 6px;
+  background-color: var(--dsc-color-bg-neutral-1);
+  padding: 12px;
+}
+
+.consolidado-detalhe-label {
+  display: block;
+  color: var(--dsc-color-bg-neutral-6);
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.table-consolidado-resumo tbody tr.row-selected {
+  background-color: lightgray;
+}
+
+@media (max-width: 768px) {
+  .consolidado-search-row {
+    justify-content: stretch;
+
+    dsc-input {
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+.cdk-column-convenio,
+.cdk-column-sequencial {
+  text-align: center;
+}
+
+.label-danger {
+  color: var(--dsc-color-bg-danger-4) !important
+}
+
+.label-success {
+  color: var(--dsc-color-bg-success-4) !important
+}
+
+
+.hide {
+  display: none;
+}
