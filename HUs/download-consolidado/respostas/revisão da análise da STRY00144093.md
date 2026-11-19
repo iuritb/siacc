@@ -31,12 +31,24 @@ Os nomes, convênios, sequenciais, estados, datas e nomes de arquivos apresentad
 Dúvidas prioritárias
 Precisam de decisão antes de fechar escopo funcional e planejar a implementação:
 
-Qual tela/rota deve receber a funcionalidade? A referência anterior ao Relatório de Remessas foi removida do histórico vigente.
-O que seleciona o “dia selecionado”? Qual é a data inicial, o comportamento da consulta e a relação dessa data com Data/hora situação e Data/hora do processamento?
-O card é único para a data selecionada, com uma linha por tipo disponível, ou deve haver outra relação entre lista, card e arquivos? A imagem sugere uma possibilidade, mas não define o requisito.
-Como tratar a disponibilidade individual dos formatos: ambos devem sempre aparecer, ou cada um somente quando existir? Que estados são válidos e como afetam o download?
-Como a simulação deve representar o download sem backend nem arquivo CNAB real? A HU pede download, mas os materiais não definem se a interação mock deve apenas simular a ação ou apresentar outro feedback. Não se deve produzir um arquivo fictício como CNAB válido.
-“Usuário Matriz” identifica o público, mas qual comportamento é esperado para outros usuários e qual mecanismo existente deve ser respeitado? Não é possível inferir política de autorização a partir da HU ou da imagem.
+1. Qual tela/rota deve receber a funcionalidade? 
+ -> A  funcionalidade deve ficar junto da tela de relatorio de remessas separando a funcionalidade ja existente na tela com a nova por um tabgroup assim como mostrado no print do prototipo do figma. 
+
+2. O que seleciona o “dia selecionado”? Qual é a data inicial, o comportamento da consulta e a relação dessa data com Data/hora situação e Data/hora do processamento? 
+ -> a data inicial sera a do dia vigente, apos a consulta a tela que sera montada sera a tabela com a lista dos consolidados do dia de consulta, a Data/hora situação e Data/hora do processamento serão apenas campos da tabela com dados retornados pelo backend 
+
+3. O card é único para a data selecionada, com uma linha por tipo disponível, ou deve haver outra relação entre lista, card e arquivos? A imagem sugere uma possibilidade, mas não define o requisito.
+ -> O card ira exibir os detalhes de um consolidado selecionado a partir de uma linha da tabela e será exibido apenas depois que o usuário clicar em uma linha da tabela 
+
+4. Como tratar a disponibilidade individual dos formatos: ambos devem sempre aparecer, ou cada um somente quando existir? Que estados são válidos e como afetam o download?
+ -> O download deverá estar disponivel a partir de uma das colunas da tabela de listagem dos consolidados, o card com os detalhes deste so serão exibidos quando o usuário clicar em uma linha da tabela, antes disso acontecer deve aparecer em tela apenas a tabela com a listagem dos consolidados do dia selecionado. 
+
+5. Como a simulação deve representar o download sem backend nem arquivo CNAB real? A HU pede download, mas os materiais não definem se a interação mock deve apenas simular a ação ou apresentar outro feedback. Não se deve produzir um arquivo fictício como CNAB válido.
+ -> Nesse primeiro momento de montar a tela com dados mockados é apenas para montar o layout da tela e preparar as chamadas para o backend quando ele estiver pronto, para apenas fazer a integraçao no futuro. A ideia aqui é criar toda a estrutura do componente no front ja seguindo os padroes da arquitetura de feature 
+
+6. “Usuário Matriz” identifica o público, mas qual comportamento é esperado para outros usuários e qual mecanismo existente deve ser respeitado? Não é possível inferir política de autorização a partir da HU ou da imagem.
+ -> Analise como o relatorio de remessa se comporta nesse cenario e replique para essa nova funcionalidade. 
+ 
 Não bloqueiam a análise mock-first, mas precisam ser tratadas antes de alegar integração real: endpoints, DTOs, parâmetros, headers, nome/conteúdo do arquivo e tratamento de erros do backend. Conforme o escopo informado, não há contrato a presumir. Estados de carregamento, vazio e erro também precisam de decisão ou confirmação de padrão existente antes de serem especificados como comportamento desta HU.
 
 Ajustes necessários ao rascunho v0.1 e dependência
