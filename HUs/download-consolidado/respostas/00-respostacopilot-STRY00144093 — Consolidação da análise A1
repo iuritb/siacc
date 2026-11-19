@@ -1,0 +1,252 @@
+Vou consolidar a revisão A1 nos dois documentos autorizados, mantendo os critérios originais e separando decisões confirmadas de pendências. Primeiro vou reler as fontes e o registro de aprovação; não vou inspecionar nem alterar o componente, nem iniciar A2.
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\work-items\\STRY00144093\\requirements-analysis.md"
+}
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\work-items\\STRY00144093\\scope-mock-first.md"
+}
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\work-items\\STRY00144093\\approvals.md"
+}
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\work-items\\STRY00144093\\user-story.md"
+}
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\work-items\\STRY00144093\\consolidado-dependencia.md"
+}
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\work-items\\STRY00144093\\START.md"
+}
+
+Read `SKILL.md`
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\.github\\skills\\user-story-analysis\\SKILL.md"
+}
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\context\\feature-development-workflow.md"
+}
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\.github\\copilot-instructions.md"
+}
+
+Search for `^`
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\templates\\requirements-analysis.md"
+}
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\.github\\instructions\\mock-first-development.instructions.md"
+}
+
+Read `SKILL.md`
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\.github\\skills\\figma-to-feature\\SKILL.md"
+}
+
+Read `SKILL.md`
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\.github\\skills\\mock-first-development\\SKILL.md"
+}
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\.github\\instructions\\feature-development.instructions.md"
+}
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Search for `^`
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\work-items\\STRY00144093\\requirements-analysis.md"
+}
+
+Search for `^`
+
+Read 
+Completed with input: {
+  "path": "C:\\desenvolvimento\\ssh\\SIACC-pixautomatico-frontend\\docs\\work-items\\STRY00144093\\scope-mock-first.md"
+}
+
+Search for `^`
+
+Não consegui gravar os arquivos: nesta sessão só tenho ferramentas de leitura e busca, sem ferramenta de edição. **Os dois documentos permanecem inalterados.** Abaixo está a revisão proposta para aprovação; não inspecionei nem alterei código e não iniciei A2.
+
+## `requirements-analysis.md` — proposta A1 v0.3
+
+### Fontes e versões
+
+- `HU vigente`: cópia local da descrição atualizada em 23/10/2026 às 14:38:30. Não há número de versão informado; a fonte oficial permanece o ServiceNow.
+- `Análise anterior`: v0.1, rascunho não aprovado, substituído por esta revisão proposta.
+- `Decisões de escopo mock-first`: atualizadas pelas decisões fornecidas nesta conversa.
+- `Dependência`: resumo local de HU anterior, sem ID informado; não acrescenta requisitos à HU atual.
+- `Referência visual`: orientação visual, não fonte de requisitos.
+- `Registro de aprovações`: A1 permanece pendente.
+
+### Objetivo
+
+Apresentar, na tela existente de Relatório de Remessas, uma consulta mockada de consolidados por data. Após a consulta, mostrar a tabela de resultados. Ao selecionar uma linha, exibir no card “Retorno Consolidado” os detalhes do registro selecionado. A ação de download fica na coluna Arquivo da tabela.
+
+### Ator
+
+Usuário Matriz. O comportamento de acesso deverá seguir o padrão já existente no Relatório de Remessas; sua implementação específica precisa ser verificada em A2, sem presumir mecanismo ou regra de autorização.
+
+### Critérios oficiais da HU — preservados
+
+**CA01 – Tipos de arquivo disponíveis:** Dado que existam arquivos de retorno consolidado processados, quando o usuário Matriz visualizar o novo CARD, então deverão ser disponibilizados para download os arquivos CNAB 750 e CNAB 150.
+
+**CA02 – Informações apresentadas no CARD:** Dado que exista um arquivo de retorno consolidado disponível, quando ele for apresentado no CARD, então deverão ser exibidas as informações Nome do arquivo, Tipo do arquivo, Situação, Data do processamento e Hora do processamento.
+
+### Requisitos explícitos adicionais da descrição vigente
+
+- Antes do card deve haver uma lista dos consolidados do dia selecionado, com Tipo de Remessa, Arquivo, Convênio, Sequencial e Data/hora situação.
+- O título do card é “Retorno Consolidado”.
+- A coluna Arquivo é o local da ação de download.
+
+### Decisões complementares confirmadas
+
+- A funcionalidade ficará na tela existente de Relatório de Remessas, usando um tab group para separar Remessas e Consolidados.
+- A data inicial será a data do dia vigente.
+- Após a consulta, a tabela exibirá os consolidados referentes à data consultada.
+- Data/hora situação e data/hora do processamento vêm dos registros retornados pela fonte de dados; não serão calculadas pelo componente.
+- O card ficará oculto até a seleção de uma linha e apresentará os detalhes do consolidado selecionado.
+- O download será acionado pela coluna Arquivo da tabela.
+- Esta fase é exclusivamente frontend, com consultas e dados mockados, preparando estrutura para integração futura.
+- O acesso do usuário Matriz seguirá o padrão existente no Relatório de Remessas.
+- A HU é a fonte de requisitos; Figma é apenas referência visual.
+
+### Matriz de rastreabilidade inicial
+
+| ID | Fonte | Requisito | Área indicada / evidência futura | Status |
+|---|---|---|---|---|
+| CA01 | Critério oficial da HU | Disponibilizar CNAB 750 e 150 para download ao usuário Matriz quando houver arquivos processados. | Ação na coluna Arquivo conforme decisão complementar; testes com interação mockada. Não comprova arquivo CNAB válido nem integração. | Pendente |
+| CA02 | Critério oficial da HU | Exibir Nome, Tipo, Situação, Data do processamento e Hora do processamento no card. | Card do registro selecionado; testes com dados sintéticos e datas fornecidas pela fonte mockada. | Pendente |
+| REQ-01 | Descrição vigente da HU | Exibir lista antes do card com Tipo de Remessa, Arquivo, Convênio, Sequencial e Data/hora situação. | Tabela de consolidados; conferir colunas, dados e ordem. | Pendente |
+| REQ-02 | Descrição vigente da HU | Nome do card “Retorno Consolidado”. | Card; conferir título. | Pendente |
+| DEC-01 | Decisão complementar | Funcionalidade na tela Relatório de Remessas, em tab group Remessas/Consolidados. | Componente informado: `src/app/pages/relatorioremessa/relatorioremessa.component.ts` — não inspecionado nesta A1. | Pendente |
+| DEC-02 | Decisão complementar | Inicializar data com o dia vigente; tabela corresponde à data consultada. | Consulta mockada; conferir data inicial e resultado associado à data consultada. | Pendente |
+| DEC-03 | Decisão complementar | Exibir datas/horas retornadas pela fonte, sem cálculo no componente. | Fixture com valores de data/hora; verificar que são apresentados como recebidos, respeitando formatação ainda a confirmar. | Pendente |
+| DEC-04 | Decisão complementar | Card oculto até seleção de linha; mostrar detalhes do item selecionado. | Testar estado inicial após consulta, seleção e troca de seleção. Comportamento ao trocar data ainda precisa de definição. | Pendente |
+| DEC-05 | Decisão complementar | Ação de download na coluna Arquivo. | Testar ação simulada; forma de feedback ainda não definida. Não gerar CNAB fictício como válido. | Pendente |
+| DEC-06 | Decisão complementar | Somente frontend nesta fase; consultas e dados mockados. | Validar sem chamadas reais ao backend e sem contrato/endpoints inventados. | Pendente |
+| DEC-07 | Decisão complementar | Acesso Matriz segue padrão existente no Relatório de Remessas. | Comparação com padrão existente a realizar em A2; sem especificar regra antecipadamente. | Pendente |
+| VIS-01 | Figma | Layout, abas e demais elementos ilustrados são referências, não requisitos por si sós. | Comparar visualmente sem promover elementos extras a comportamento obrigatório. | Pendente |
+
+IDs `REQ-*`, `DEC-*` e `VIS-*` são auxiliares desta análise, não IDs oficiais. A HU anterior sobre geração diária não é requisito de implementação frontend desta história.
+
+### Escopo e exclusões desta fase
+
+Inclui interface e consultas simuladas, dados sintéticos e estrutura frontend preparada para futura integração. Não inclui backend, endpoint ou DTO oficial, geração de CNAB, validação de arquivo real ou comprovação de download integrado. A decisão de mockar não define por si só como o clique no download será representado; essa interação deve ser especificada antes da implementação, sem produzir arquivo fictício como válido.
+
+### Questões ainda pendentes
+
+**Para esclarecer antes de especificar completamente os comportamentos:**
+
+1. Como a simulação de download deve responder ao clique na coluna Arquivo — por exemplo, qual feedback deve ser apresentado? Não há decisão para gerar qualquer arquivo.
+2. Ao consultar outra data, o card deve ser limpo imediatamente? O que deve ocorrer quando não houver linhas ou a consulta mockada falhar?
+3. Qual formato de apresentação de datas e horas deve ser usado? A HU determina que os valores vêm da fonte, mas não define formatação ou fuso.
+4. Como CA01 (“disponibilizados para download” ao visualizar o card) se relaciona com a decisão de colocar a ação exclusivamente na coluna Arquivo? A decisão define o local da ação, mas a correspondência exata com o texto do critério deve ser confirmada.
+5. O padrão atual de acesso Matriz, os componentes de UI e os contratos existentes serão verificados em A2; esta análise não declara evidência de código.
+
+Endpoints, DTOs, headers e demais detalhes do backend não são definidos nesta fase, pois o backend está indisponível e fora do escopo atual. Devem ser tratados quando houver contrato para integração futura.
+
+### Figma
+
+O tab group está confirmado por decisão complementar, não por ser mostrado no Figma. Os demais elementos visuais — filtros Interação/Automático, busca por Convênio, textos demonstrativos e datas/nomes da imagem — não se tornam requisitos. A composição visual pode orientar a implementação após aprovação, sem sobrepor a HU ou as decisões confirmadas.
+
+### Gate A1
+
+**A1 v0.3 — aguardando aprovação do desenvolvedor.** A aprovação desta análise não inicia automaticamente A2; a etapa seguinte exige autorização explícita separada, conforme o workflow.
+
+## `scope-mock-first.md` — proposta revisada
+
+```md
+# Escopo mock-first — STRY00144093 — A1 v0.3
+
+## Decisões confirmadas
+
+1. A funcionalidade ficará na tela existente de Relatório de Remessas (`relatorioremessa.component`), com tab group para separar Remessas e Consolidados.
+2. A data inicial será a data do dia vigente.
+3. Após a consulta, será apresentada uma tabela com os consolidados referentes à data consultada.
+4. Data/hora situação e data/hora do processamento são dados retornados pela fonte de dados, não valores calculados pelo componente.
+5. O card “Retorno Consolidado” ficará oculto até o usuário selecionar uma linha da tabela.
+6. O card exibirá os detalhes do consolidado selecionado.
+7. A ação de download ficará na coluna Arquivo da tabela.
+8. O desenvolvimento desta fase é exclusivamente frontend, com dados e consultas mockados, preparando a estrutura para futura integração com backend.
+9. O acesso do usuário Matriz seguirá o padrão existente no Relatório de Remessas.
+10. A HU é a fonte de requisitos, complementada por estas decisões. O Figma é apenas referência visual.
+
+Estas decisões definem o escopo informado, mas não representam aprovação do gate A1, A2, A3 ou de implementação.
+
+## Critérios oficiais preservados
+
+- CA01: quando houver arquivos de retorno consolidado processados, ao visualizar o novo card, o usuário Matriz deverá ter disponíveis para download os arquivos CNAB 750 e CNAB 150.
+- CA02: quando um arquivo de retorno consolidado disponível for apresentado no card, deverão ser exibidos Nome do arquivo, Tipo do arquivo, Situação, Data do processamento e Hora do processamento.
+
+A descrição vigente também exige lista anterior ao card com Tipo de Remessa, Arquivo, Convênio, Sequencial e Data/hora situação, além do título “Retorno Consolidado”. O download na coluna Arquivo é confirmado por decisão complementar.
+
+## Relação com o Figma
+
+A imagem pode orientar composição e apresentação, mas não cria requisitos. Tab group está confirmado pela decisão 1, independentemente do Figma. Filtros Interação/Automático, busca por Convênio, textos de demonstração, nomes, sequenciais e datas ilustrativas não são requisitos aprovados. Não copiar dados demonstrativos como dados reais ou regras.
+
+## Limites e pontos em aberto
+
+- Não criar endpoint, DTO oficial, chamada HTTP ou contrato inexistente.
+- Não gerar CNAB fictício nem apresentar mock como integração ou arquivo real.
+- A interação/feedback visual do download mockado ainda requer decisão.
+- Permanecem a confirmar os estados sem resultados, erro de consulta, atualização da data e formatação/fuso de datas e horas.
+- Verificar em A2 o padrão de acesso Matriz e as convenções existentes de tela, tabs e interação. Nenhuma evidência de código é declarada nesta análise.
+- Não assumir que os elementos exclusivos do Figma sejam obrigatórios.
+```
+
+**Aprovação solicitada:** STRY00144093, etapa A1, revisão v0.3. Após sua aprovação, aguardarei autorização explícita para A2.
